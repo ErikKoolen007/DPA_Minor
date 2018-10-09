@@ -19,7 +19,7 @@ namespace DPA_Musicsheets.Managers
     /// This is the one and only god class in the application.
     /// It knows all about all file types, knows every viewmodel and contains all logic.
     /// TODO: Clean this class up.
-    /// </summary>
+    /// </summary>----
     public class MusicLoader
     {
         #region Properties
@@ -313,7 +313,7 @@ namespace DPA_Musicsheets.Managers
                         break;
                     case LilypondTokenKind.Rest:
                         var restLength = Int32.Parse(currentToken.Value[1].ToString());
-                        symbols.Add(new Rest((MusicalSymbolDuration)restLength));
+                        //symbols.Add(new Rest((MusicalSymbolDuration)restLength));
                         break;
                     case LilypondTokenKind.Bar:
                         symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });

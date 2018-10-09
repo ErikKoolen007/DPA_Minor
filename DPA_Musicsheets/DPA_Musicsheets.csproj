@@ -103,6 +103,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="domain\Clef.cs" />
+    <Compile Include="domain\ConcreteNote.cs" />
+    <Compile Include="domain\CrossDecorator.cs" />
+    <Compile Include="domain\DotDecorator.cs" />
+    <Compile Include="domain\Note.cs" />
+    <Compile Include="domain\MoleDecorator.cs" />
+    <Compile Include="domain\NoteDecorator.cs" />
+    <Compile Include="domain\Rest.cs" />
+    <Compile Include="domain\Time.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\LilypondToken.cs" />
@@ -224,6 +233,9 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Punten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Rusten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
