@@ -103,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="domain\Note.cs" />
+    <Compile Include="domain\MusicPart.cs" />
+    <Compile Include="domain\NoteCross.cs" />
+    <Compile Include="domain\NoteMole.cs" />
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
     <Compile Include="factories\MidiFactory.cs" />
@@ -229,7 +233,6 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="domain\" />
     <Folder Include="service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
