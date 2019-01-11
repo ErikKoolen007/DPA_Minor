@@ -47,6 +47,7 @@ namespace DPA_Musicsheets.Managers
         /// <param name="fileName"></param>
         public void OpenFile(string fileName)
         {
+            //just moved
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
                 MidiSequence = new Sequence();
@@ -56,6 +57,7 @@ namespace DPA_Musicsheets.Managers
                 this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
                 this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             }
+            //------
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {
                 StringBuilder sb = new StringBuilder();

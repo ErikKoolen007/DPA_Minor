@@ -103,15 +103,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="domain\Clef.cs" />
-    <Compile Include="domain\ConcreteNote.cs" />
-    <Compile Include="domain\CrossDecorator.cs" />
-    <Compile Include="domain\DotDecorator.cs" />
-    <Compile Include="domain\Note.cs" />
-    <Compile Include="domain\MoleDecorator.cs" />
-    <Compile Include="domain\NoteDecorator.cs" />
-    <Compile Include="domain\Rest.cs" />
-    <Compile Include="domain\Time.cs" />
+    <Compile Include="factories\FileFactory.cs" />
+    <Compile Include="factories\LilyPondFactory.cs" />
+    <Compile Include="factories\MidiFactory.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\LilypondToken.cs" />
@@ -235,6 +229,7 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="domain\" />
     <Folder Include="service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
