@@ -103,10 +103,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="domain\Clef.cs" />
+    <Compile Include="domain\MusicPartWrapper.cs" />
     <Compile Include="domain\Note.cs" />
     <Compile Include="domain\MusicPart.cs" />
+    <Compile Include="domain\NoteApostrophe.cs" />
+    <Compile Include="domain\NoteComma.cs" />
     <Compile Include="domain\NoteCross.cs" />
+    <Compile Include="domain\NoteDot.cs" />
+    <Compile Include="domain\NoteMark.cs" />
     <Compile Include="domain\NoteMole.cs" />
+    <Compile Include="domain\NoteResound.cs" />
+    <Compile Include="domain\Rest.cs" />
+    <Compile Include="domain\Time.cs" />
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
     <Compile Include="factories\MidiFactory.cs" />

@@ -8,8 +8,8 @@ namespace DPA_Musicsheets.domain
 {
     abstract class Note : MusicPart
     {
-        protected string letter;
-        protected int duration;
+        protected string letter { get; set; }
+        protected int duration { get; set; }
 
         public Note(string letter, int duration)
         {
@@ -17,7 +17,7 @@ namespace DPA_Musicsheets.domain
             this.duration = duration;
         }
 
-        public abstract void decorate();
+        public abstract void Decorate();
 
         public override string ToString()
         {

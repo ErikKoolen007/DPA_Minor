@@ -10,10 +10,10 @@ namespace DPA_Musicsheets.domain
     {
         public NoteCross(string letter, int duration) : base(letter, duration)
         {
-            decorate();
+            Decorate();
         }
 
-        public sealed override void decorate()
+        public sealed override void Decorate()
         {
             letter = letter + "is";
         }

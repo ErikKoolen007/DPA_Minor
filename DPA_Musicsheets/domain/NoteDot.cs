@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    class NoteApostrophe : Note
+    class NoteDot : Note
     {
-        public NoteApostrophe(string letter, int duration) : base(letter, duration)
+        public NoteDot(string letter, int duration) : base(letter, duration)
         {
             Decorate();
         }
 
         public sealed override void Decorate()
         {
-            letter = "'" + letter;
-        } 
+            letter = letter + ".";
+        }
     }
 }
