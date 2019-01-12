@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    class NoteCross : Note
+    class BaseNoteMole : BaseNote
     {
-        public NoteCross(string letter, int duration) : base(letter, duration)
+        public BaseNoteMole(BaseNote note) : base(note.letter, note.duration)
         {
             Decorate();
         }
 
         public sealed override void Decorate()
         {
-            letter = letter + "is";
+            letter = letter + "es";
         }
     }
 }

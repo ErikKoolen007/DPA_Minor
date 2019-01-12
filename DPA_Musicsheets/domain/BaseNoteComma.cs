@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    class NoteApostrophe : Note
+    class BaseNoteComma : BaseNote
     {
-        public NoteApostrophe(string letter, int duration) : base(letter, duration)
+        public BaseNoteComma(BaseNote note) : base(note.letter, note.duration)
         {
             Decorate();
         }
 
+        //check this
         public sealed override void Decorate()
         {
-            letter = "'" + letter;
-        } 
+            letter = "," + letter;
+        }
     }
 }

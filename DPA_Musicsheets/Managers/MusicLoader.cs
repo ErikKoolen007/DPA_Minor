@@ -144,6 +144,7 @@ namespace DPA_Musicsheets.Managers
                                     _bpm = 60000000 / tempo;
                                     lilypondContent.AppendLine($"\\tempo 4={_bpm}");
                                     break;
+                                //Wordt het onderstaande überhaupt ergens voor gebruikt?
                                 case MetaType.EndOfTrack:
                                     if (previousNoteAbsoluteTicks > 0)
                                     {
@@ -169,7 +170,7 @@ namespace DPA_Musicsheets.Managers
                             {
                                 if(channelMessage.Data2 > 0) // Data2 = loudness
                                 {
-                                    // Append the new note.
+                                    // Append the new baseNote.
                                     lilypondContent.Append(MidiToLilyHelper.GetLilyNoteName(previousMidiKey, channelMessage.Data1));
                                     
                                     previousMidiKey = channelMessage.Data1;
@@ -177,7 +178,7 @@ namespace DPA_Musicsheets.Managers
                                 }
                                 else if (!startedNoteIsClosed)
                                 {
-                                    // Finish the previous note with the length.
+                                    // Finish the previous baseNote with the length.
                                     double percentageOfBar;
                                     lilypondContent.Append(MidiToLilyHelper.GetLilypondNoteLength(previousNoteAbsoluteTicks, midiEvent.AbsoluteTicks, division, _beatNote, _beatsPerBar, out percentageOfBar));
                                     previousNoteAbsoluteTicks = midiEvent.AbsoluteTicks;

@@ -3,25 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DPA_Musicsheets.domain;
 
 namespace DPA_Musicsheets.domain
 {
-    abstract class Note : MusicPart
+    public class Note : BaseNote
     {
-        protected string letter { get; set; }
-        protected int duration { get; set; }
-
-        public Note(string letter, int duration)
+        public Note(string letter, string duration) : base(letter, duration)
         {
             this.letter = letter;
             this.duration = duration;
         }
 
-        public abstract void Decorate();
-
-        public override string ToString()
+        public override void Decorate()
         {
-            return letter + duration;
+            throw new NotImplementedException();
         }
     }
 }

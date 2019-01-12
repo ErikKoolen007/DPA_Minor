@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    class NoteComma : Note
+    class BaseNoteMark : BaseNote
     {
-        public NoteComma(string letter, int duration) : base(letter, duration)
+        public BaseNoteMark(BaseNote note) : base(note.letter, note.duration)
         {
             Decorate();
         }
 
         public sealed override void Decorate()
         {
-            letter = "," + letter;
+            duration = duration + " | \n";
         }
     }
 }

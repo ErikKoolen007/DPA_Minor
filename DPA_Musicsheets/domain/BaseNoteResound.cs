@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    class NoteDot : Note
+    class BaseNoteResound : BaseNote
     {
-        public NoteDot(string letter, int duration) : base(letter, duration)
+        public BaseNoteResound(BaseNote note) : base(note.letter, note.duration)
         {
             Decorate();
         }
 
         public sealed override void Decorate()
         {
-            letter = letter + ".";
+            letter = "~" + letter;
         }
     }
 }

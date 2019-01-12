@@ -14,7 +14,7 @@ namespace DPA_Musicsheets.factories
         {
             this.file_name = file_name;
         }
-        public void LoadIntoDomain()
+        public override void LoadIntoDomain()
         {
 
         }

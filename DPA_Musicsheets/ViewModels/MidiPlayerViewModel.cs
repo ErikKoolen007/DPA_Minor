@@ -61,7 +61,7 @@ namespace DPA_Musicsheets.ViewModels
         // Wanneer een channelmessage langskomt sturen we deze direct door naar onze audio.
         // Channelmessages zijn tonen met commands als NoteOn en NoteOff
         // In midi wordt elke noot gespeeld totdat NoteOff is benoemd. Wanneer dus nooit een NoteOff komt nadat die een NoteOn heeft gehad
-        // zal deze note dus oneindig lang blijven spelen.
+        // zal deze baseNote dus oneindig lang blijven spelen.
         private void ChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
             try

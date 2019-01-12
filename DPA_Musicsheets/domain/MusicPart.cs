@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.domain
 {
-    interface MusicPart
+    public interface MusicPart
     {
         string ToString();
     }

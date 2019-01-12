@@ -4,11 +4,13 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DPA_Musicsheets.domain;
 
 namespace DPA_Musicsheets.factories
 {
-    interface FileFactory
+    public abstract class FileFactory
     {
-        void LoadIntoDomain();
+        protected LinkedList<MusicPart> content { get; set; } = new LinkedList<MusicPart>();
+        public abstract void LoadIntoDomain();
     }
 }

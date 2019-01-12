@@ -103,18 +103,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="adapters\EndTrackAdaptee.cs" />
+    <Compile Include="adapters\MetaTypeAdapter.cs" />
+    <Compile Include="adapters\TempoAdaptee.cs" />
+    <Compile Include="adapters\TimeSignatureAdaptee.cs" />
+    <Compile Include="domain\BaseNoteSpace.cs" />
     <Compile Include="domain\Clef.cs" />
     <Compile Include="domain\MusicPartWrapper.cs" />
-    <Compile Include="domain\Note.cs" />
+    <Compile Include="domain\BaseNote.cs" />
     <Compile Include="domain\MusicPart.cs" />
-    <Compile Include="domain\NoteApostrophe.cs" />
-    <Compile Include="domain\NoteComma.cs" />
-    <Compile Include="domain\NoteCross.cs" />
-    <Compile Include="domain\NoteDot.cs" />
-    <Compile Include="domain\NoteMark.cs" />
-    <Compile Include="domain\NoteMole.cs" />
-    <Compile Include="domain\NoteResound.cs" />
+    <Compile Include="domain\BaseNoteApostrophe.cs" />
+    <Compile Include="domain\BaseNoteComma.cs" />
+    <Compile Include="domain\BaseNoteCross.cs" />
+    <Compile Include="domain\BaseNoteDot.cs" />
+    <Compile Include="domain\BaseNoteMark.cs" />
+    <Compile Include="domain\BaseNoteMole.cs" />
+    <Compile Include="domain\BaseNoteResound.cs" />
+    <Compile Include="domain\Note.cs" />
     <Compile Include="domain\Rest.cs" />
+    <Compile Include="domain\Tempo.cs" />
     <Compile Include="domain\Time.cs" />
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
