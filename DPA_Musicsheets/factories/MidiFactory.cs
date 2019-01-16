@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.adapters;
@@ -49,12 +50,14 @@ namespace DPA_Musicsheets.factories
                 {
                     // Append the new baseNote.
                     //note.letter = MidiToLilyHelper.GetLilyNoteName(_previousMidiKey, msg.Data1);
-                    note = TranslateMidiName(msg.Data1 % 12, note);
+                    note = TranslateMidiName(msg.Data1 % 12, note, _previousMidiKey);
 
                     _previousMidiKey = msg.Data1;
                     _startedNoteIsClosed = false;
+                    return note;
                 }
-                else if (!_startedNoteIsClosed)
+
+                if (!_startedNoteIsClosed)
                 {
                     // Finish the previous baseNote with the length.
                     
@@ -75,14 +78,13 @@ namespace DPA_Musicsheets.factories
                         _percentageOfBarReached -= 1;
                     }
                     _startedNoteIsClosed = true;
+                    return note;
                 }
-                else
-                {
-                    //lilypondContent.Append("r");
-                    Rest r = new Rest();
-                }
-            }
 
+                int restDuration = TranslateMidiDuration(e.AbsoluteTicks, division, null);
+                Rest r = new Rest(restDuration);
+                return r;
+            }
             return null;
         }
 
@@ -103,61 +105,128 @@ namespace DPA_Musicsheets.factories
             return null;
         }
 
-        private BaseNote TranslateMidiName(int midiKey, BaseNote note)
+        private BaseNote TranslateMidiName(int midiKey, BaseNote note, int previousMidiKey)
         {
-            BaseNoteCross crossNote = null;
+            BaseNoteCross crossNote;
+            BaseNoteMole moleNote;
 
-            switch (midiKey % 12)
+            int KeyNumber = midiKey % 12;
+            int prevMidiKeyNumber = previousMidiKey % 12;
+
+            if (KeyNumber == 0)
             {
-                case 0:
-                    note.letter = "c";
-                    break;
-                case 1:
-                    note.letter = "c";
-                    crossNote = new BaseNoteCross(note);
-                    note = crossNote;
-                    break;
-                case 2:
-                    note.letter = "d";
-                    break;
-                case 3:
-                    note.letter = "d";
-                    crossNote = new BaseNoteCross(note);
-                    note = crossNote;
-                    break;
-                case 4:
-                    note.letter = "e";
-                    break;
-                case 5:
-                    note.letter = "f";
-                    break;
-                case 6:
-                    note.letter = "f";
-                    crossNote = new BaseNoteCross(note);
-                    note = crossNote;
-                    break;
-                case 7:
-                    note.letter = "g";
-                    break;
-                case 8:
-                    note.letter = "g";
-                    crossNote = new BaseNoteCross(note);
-                    note = crossNote;
-                    break;
-                case 9:
-                    note.letter = "a";
-                    break;
-                case 10:
-                    note.letter = "a";
-                    crossNote = new BaseNoteCross(note);
-                    note = crossNote;
-                    break;
-                case 11:
-                    note.letter = "b";
-                    break;
+                note.letter = "c";
+                return note;
             }
 
-            return note;
+            if (KeyNumber == 1 && prevMidiKeyNumber == 0)
+            {
+                note.letter = "c";
+                crossNote = new BaseNoteCross(note);
+                note = crossNote;
+                return note;
+            }
+
+            if (KeyNumber == 1 && prevMidiKeyNumber == 2)
+            {
+                note.letter = "d";
+                moleNote = new BaseNoteMole(note);
+                note = moleNote;
+                return note;
+            }
+
+            if (KeyNumber == 2)
+            {
+                note.letter = "d";
+                return note;
+            }
+
+            if (KeyNumber == 3 && prevMidiKeyNumber == 2)
+            {
+                note.letter = "d";
+                crossNote = new BaseNoteCross(note);
+                note = crossNote;
+                return note;
+            }
+
+            if (KeyNumber == 3 && prevMidiKeyNumber == 4)
+            {
+                note.letter = "e";
+                moleNote = new BaseNoteMole(note);
+                note = moleNote;
+                return note;
+            }
+
+            if (KeyNumber == 4)
+            {
+                note.letter = "e";
+                return note;
+            }
+
+            if (KeyNumber == 5)
+            {
+                note.letter = "f";
+                return note;
+            }
+
+            if (KeyNumber == 6 && prevMidiKeyNumber == 5)
+            {
+                note.letter = "f";
+                crossNote = new BaseNoteCross(note);
+                note = crossNote;
+                return note;
+            }
+
+            if (KeyNumber == 7)
+            {
+                note.letter = "g";
+                return note;
+            }
+
+            if (KeyNumber == 8 && prevMidiKeyNumber == 7)
+            {
+                note.letter = "g";
+                crossNote = new BaseNoteCross(note);
+                note = crossNote;
+                return note;
+            }
+
+            if (KeyNumber == 8 && prevMidiKeyNumber == 9)
+            {
+                note.letter = "g";
+                moleNote = new BaseNoteMole(note);
+                note = moleNote;
+                return note;
+            }
+
+            if (KeyNumber == 9)
+            {
+                note.letter = "a";
+                return note;
+            }
+
+            if (KeyNumber == 10 && prevMidiKeyNumber == 9)
+            {
+                note.letter = "a";
+                crossNote = new BaseNoteCross(note);
+                note = crossNote;
+                return note;
+            }
+
+            if (KeyNumber == 10 && prevMidiKeyNumber == 11)
+            {
+                note.letter = "a";
+                moleNote = new BaseNoteMole(note);
+                note = moleNote;
+                return note;
+            }
+
+            if (KeyNumber == 11)
+            {
+                note.letter = "b";
+                return note;
+            }
+            return null;
         }
 
         private int TranslateMidiDuration(int absoluteTicks, int division, BaseNote note)
