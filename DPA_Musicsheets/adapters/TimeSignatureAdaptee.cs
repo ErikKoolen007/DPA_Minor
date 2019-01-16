@@ -26,7 +26,6 @@ namespace DPA_Musicsheets.adapters
         public override MusicPart LoadIntoDomain()
         {
             Time time = new Time(_beatNote, _beatsPerBar);
-
             return time;
         }
 
@@ -37,7 +36,6 @@ namespace DPA_Musicsheets.adapters
             _beatsPerBar = (int)(1 / Math.Pow(timeSignatureBytes[1], -2));
             factory._beatNote = _beatNote;
             factory._beatsPerBar = _beatsPerBar;
-            //lilypondContent.AppendLine($"\\time {_beatNote}/{_beatsPerBar}");
         }
     }
 }

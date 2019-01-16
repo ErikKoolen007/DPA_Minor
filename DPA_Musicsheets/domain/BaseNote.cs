@@ -16,12 +16,11 @@ namespace DPA_Musicsheets.domain
             this.letter = letter;
             this.duration = duration;
         }
-
         public abstract void Decorate();
 
         public override string ToString()
         {
-            return letter + duration;
+            return letter + duration + " ";
         }
     }
 }

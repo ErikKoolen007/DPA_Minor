@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DPA_Musicsheets.domain;
 
 namespace DPA_Musicsheets.factories
 {
@@ -14,9 +15,9 @@ namespace DPA_Musicsheets.factories
         {
             this.file_name = file_name;
         }
-        public override void LoadIntoDomain()
+        public override LinkedList<MusicPart> LoadIntoDomain()
         {
-
+            return null;
         }
     }
 }

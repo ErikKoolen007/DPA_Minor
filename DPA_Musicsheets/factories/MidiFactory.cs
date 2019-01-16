@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +19,21 @@ namespace DPA_Musicsheets.factories
 
         double _percentageOfBar;
         private bool _startedNoteIsClosed = true;
-        private int _lowestKey;
         private int _previousMidiKey = 60; // Central C;
-        private int _previousNoteAbsoluteTicks = 0;
-        private double _percentageOfBarReached = 0;
+        private int _lowestKey = 1000;
+        private int _previousNoteAbsoluteTicks;
+        private double _percentageOfBarReached;
         public int _beatNote { get; set; }
         public int _beatsPerBar { get; set; }
         public MidiFactory(string file_name)
         {
             this.file_name = file_name;
         }
-        public override void LoadIntoDomain()
+        public override LinkedList<MusicPart> LoadIntoDomain()
         {
+            MusicPart clef;
             open_file();
+
             for (int i = 0; i < seq.Count(); i++)
             {
                 Track track = seq[i];
@@ -38,23 +41,46 @@ namespace DPA_Musicsheets.factories
                 foreach (var midiEvent in track.Iterator())
                 {
                     IMidiMessage midiMessage = midiEvent.MidiMessage;
-
+                    MusicPart part;
                     if (midiMessage.MessageType == MessageType.Meta)
                     {
                         MetaTypeAdapter metaTypeAdapter = null;
                         var metaMessage = midiMessage as MetaMessage;
-                        MusicPart part = LoadMetaMsg(metaMessage);
+                        part = LoadMetaMsg(metaMessage);
+                        if (part != null)
+                        {
+                            content.AddLast(part);
+                        }
                     }
 
                     if (midiMessage.MessageType == MessageType.Channel)
                     {
                         var channelMessage = midiEvent.MidiMessage as ChannelMessage;
-                        checkLowestNote(channelMessage.Data1);
-                        LoadChannelMsg(channelMessage, midiEvent);
+                        CheckLowestNote(channelMessage.Data1);
+                        part = LoadChannelMsg(channelMessage, midiEvent);
+                        if (part != null)
+                        {
+                            content.AddLast(part);
+                        }
                     }
                 }
             }
 
+            if (_lowestKey > 60)
+            {
+                clef = new Clef(2, ClefType.Gclef);
+            }
+            else
+            {
+                clef = new Clef(4, ClefType.Fclef);
+            }
+
+            content.AddFirst(clef);
+
+            MusicPartWrapper relativePart = new MusicPartWrapper(content, WrapperType.Relative);
+            content = relativePart.symbols;
+
+            return content;
         }
 
         private void open_file()
@@ -78,15 +104,15 @@ namespace DPA_Musicsheets.factories
 
                     _previousMidiKey = msg.Data1;
                     _startedNoteIsClosed = false;
-                    return note;
+                    //return note;
                 }
 
                 if (!_startedNoteIsClosed)
                 {
                     // Finish the previous baseNote with the length.
                     
-                    //note.duration = MidiToLilyHelper.GetLilypondNoteLength(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, _beatNote, _beatsPerBar, file_namepercentageOfBar);
-                    note.duration = "" + TranslateMidiDuration(e.AbsoluteTicks, division, note);
+                   // note.duration = MidiToLilyHelper.GetLilypondNoteLength(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, _beatNote, _beatsPerBar, file_namepercentageOfBar);
+                    note.duration = "" + TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
                     _previousNoteAbsoluteTicks = e.AbsoluteTicks;
                     
                     BaseNoteSpace noteSpace = new BaseNoteSpace(note);
@@ -105,7 +131,7 @@ namespace DPA_Musicsheets.factories
                     return note;
                 }
 
-                int restDuration = TranslateMidiDuration(e.AbsoluteTicks, division, null);
+                int restDuration = TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
                 Rest r = new Rest(restDuration);
                 return r;
             }
@@ -123,9 +149,7 @@ namespace DPA_Musicsheets.factories
                 case MetaType.Tempo:
                     adapter = new TempoAdaptee(msg);
                     return adapter.LoadIntoDomain();
-                //perhaps add end of track?
             }
-
             return null;
         }
 
@@ -237,13 +261,12 @@ namespace DPA_Musicsheets.factories
             return note;
         }
 
-        private int TranslateMidiDuration(int absoluteTicks, int division, BaseNote note)
+        private int TranslateMidiDuration(int absoluteTicks, int nextNoteAbsoluteTicks, int division, BaseNote note)
         {
             int duration = 0;
             int dots = 0;
 
-            //is this correct?
-            double deltaTicks = _previousNoteAbsoluteTicks - absoluteTicks;
+            double deltaTicks = nextNoteAbsoluteTicks - absoluteTicks;
 
             if (deltaTicks <= 0)
             {
@@ -321,7 +344,7 @@ namespace DPA_Musicsheets.factories
             return note;
         }
 
-        private void checkLowestNote(int midiKey)
+        private void CheckLowestNote(int midiKey)
         {
             if (midiKey < _lowestKey)
             {

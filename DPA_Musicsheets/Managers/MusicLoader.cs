@@ -11,6 +11,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DPA_Musicsheets.domain;
+using DPA_Musicsheets.factories;
+using Clef = PSAMControlLibrary.Clef;
+using ClefType = PSAMControlLibrary.ClefType;
+using Note = PSAMControlLibrary.Note;
 
 namespace DPA_Musicsheets.Managers
 {
@@ -50,6 +55,17 @@ namespace DPA_Musicsheets.Managers
             //just moved
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
+                //ONLY FOR TESTING
+                //-----------------------------------------------------------
+//                FileFactory factory = new MidiFactory(fileName);
+//                LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+//
+//                foreach (MusicPart part in domainResult)
+//                {
+//                    Console.WriteLine(part.ToString());
+//                }
+                //-----------------------------------------------------------
+
                 MidiSequence = new Sequence();
                 MidiSequence.Load(fileName);
 

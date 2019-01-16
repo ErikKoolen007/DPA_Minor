@@ -19,7 +19,7 @@ namespace DPA_Musicsheets.domain
 
         public override string ToString()
         {
-            return "\\" + beatNote + "/" + beatsPerBar;
+            return "\\" + beatNote + "/" + beatsPerBar + " ";
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DPA_Musicsheets.domain
 
         public override string ToString()
         {
-            return "\\tempo 4 = " + bpm;
+            return "\\tempo 4 = " + bpm + " ";
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DPA_Musicsheets.domain
         }
         public string ToString()
         {
-            return "r" + duration;
+            return "r" + duration + " ";
         }
     }
 }

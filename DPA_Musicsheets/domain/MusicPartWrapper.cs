@@ -15,11 +15,11 @@ namespace DPA_Musicsheets.domain
     class MusicPartWrapper : MusicPart
     {
         private WrapperType type;
-        private LinkedList<MusicPart> symbols;
+        public LinkedList<MusicPart> symbols { get; set; }
         public MusicPartWrapper(LinkedList<MusicPart> symbols, WrapperType type)
         {
-            type = this.type;
-            symbols = this.symbols;
+            this.type = type;
+            this.symbols = symbols;
         }
 
         public override string ToString()
@@ -38,8 +38,17 @@ namespace DPA_Musicsheets.domain
                 case WrapperType.Repeat:
                     return "\\repeat volta { \n" + listContent.ToString() + "\n }";
                 default:
-                    return "\\relative c' { \n" + listContent.ToString() + "\n";
+                    return "\\relative c' { \n" + listContent.ToString() + "\n }";
             }
+        }
+
+        public void WrapAlternative(BaseNote start, BaseNote end)
+        {
+            if (type != WrapperType.Alternative)
+                return;
+
+            start.letter = "{ " + start.letter;
+            end.duration = end.duration + " }";
         }
     }
 }
