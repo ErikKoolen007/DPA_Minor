@@ -57,21 +57,21 @@ namespace DPA_Musicsheets.Managers
             {
                 //ONLY FOR TESTING
                 //-----------------------------------------------------------
-                FileFactory factory = new MidiFactory(fileName);
-                LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
-
-                foreach (MusicPart part in domainResult)
-                {
-                    Console.WriteLine(part.ToString());
-                }
+//                FileFactory factory = new MidiFactory(fileName);
+//                LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+//
+//                foreach (MusicPart part in domainResult)
+//                {
+//                    Console.WriteLine(part.ToString());
+//                }
                 //-----------------------------------------------------------
 
-//                MidiSequence = new Sequence();
-//                MidiSequence.Load(fileName);
-//
-//                MidiPlayerViewModel.MidiSequence = MidiSequence;
-//                this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
-//                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+                MidiSequence = new Sequence();
+                MidiSequence.Load(fileName);
+
+                MidiPlayerViewModel.MidiSequence = MidiSequence;
+                this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
+                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             }
             //------
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
