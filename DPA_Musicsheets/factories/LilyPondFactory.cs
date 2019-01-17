@@ -10,6 +10,7 @@ namespace DPA_Musicsheets.factories
     class LilyPondFactory : FileFactory
     {
         private string file_name;
+        private LinkedList<MusicPart> musicParts = new LinkedList<MusicPart>();
 
         public LilyPondFactory(string file_name)
         {
@@ -17,6 +18,8 @@ namespace DPA_Musicsheets.factories
         }
         public override LinkedList<MusicPart> LoadIntoDomain()
         {
+
+
             return null;
         }
     }

@@ -52,18 +52,14 @@ namespace DPA_Musicsheets.Managers
         /// <param name="fileName"></param>
         public void OpenFile(string fileName)
         {
+            FileFactory factory = null;
             //just moved
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
                 //ONLY FOR TESTING
                 //-----------------------------------------------------------
-//                FileFactory factory = new MidiFactory(fileName);
-//                LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+//                factory = new MidiFactory(fileName);
 //
-//                foreach (MusicPart part in domainResult)
-//                {
-//                    Console.WriteLine(part.ToString());
-//                }
                 //-----------------------------------------------------------
 
                 MidiSequence = new Sequence();
@@ -76,6 +72,10 @@ namespace DPA_Musicsheets.Managers
             //------
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {
+                factory = new LilyPondFactory(fileName);
+                
+
+                //------------------------------------
                 StringBuilder sb = new StringBuilder();
                 foreach (var line in File.ReadAllLines(fileName))
                 {
@@ -84,12 +84,17 @@ namespace DPA_Musicsheets.Managers
                 
                 this.LilypondText = sb.ToString();
                 this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+
+                //--------------------------------------------
             }
             else
             {
                 throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
             }
 
+            LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+
+            //TODO: make a system to translate domain to WPF staffs
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
