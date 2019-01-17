@@ -100,7 +100,7 @@ namespace DPA_Musicsheets.factories
                 {
                     // Append the new baseNote.
                     //note.letter = MidiToLilyHelper.GetLilyNoteName(_previousMidiKey, msg.Data1);
-                    note = TranslateMidiName(msg.Data1 % 12, note, _previousMidiKey);
+                    note = TranslateMidiName(msg.Data1, note, _previousMidiKey);
 
                     _previousMidiKey = msg.Data1;
                     _startedNoteIsClosed = false;
@@ -157,6 +157,7 @@ namespace DPA_Musicsheets.factories
             BaseNoteCross crossNote;
             BaseNoteMole moleNote;
 
+            int distance = midiKey - previousMidiKey;
             int KeyNumber = midiKey % 12;
             int prevMidiKeyNumber = previousMidiKey % 12;
 
@@ -257,6 +258,9 @@ namespace DPA_Musicsheets.factories
             {
                 note.letter = "b";
             }
+            
+            note = CheckCommaApostrophe(distance, note);
+
             return note;
         }
 
@@ -349,6 +353,26 @@ namespace DPA_Musicsheets.factories
             {
                 _lowestKey = midiKey;
             }
+        }
+
+        private BaseNote CheckCommaApostrophe(int distance, BaseNote note)
+        {
+            BaseNote wrapNote;
+            while (distance < -6)
+            {
+                wrapNote = new BaseNoteComma(note);
+                note = wrapNote;
+                distance += 8;
+            }
+
+            while (distance > 6)
+            {
+                wrapNote = new BaseNoteApostrophe(note);
+                note = wrapNote;
+                distance -= 8;
+            }
+
+            return note;
         }
     }
 }
