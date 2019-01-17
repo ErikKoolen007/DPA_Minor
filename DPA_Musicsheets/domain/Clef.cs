@@ -30,11 +30,11 @@ namespace DPA_Musicsheets.domain
             switch (ClefType)
             {
                 case ClefType.Cclef:
-                    return "\\clef soprano";
+                    return "\\clef soprano ";
                 case ClefType.Fclef:
-                    return "\\clef bass";
+                    return "\\clef bass ";
                 default:
-                    return "\\clef treble";
+                    return "\\clef treble ";
             }
         }
     }

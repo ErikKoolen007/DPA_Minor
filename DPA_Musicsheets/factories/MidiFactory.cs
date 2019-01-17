@@ -104,7 +104,6 @@ namespace DPA_Musicsheets.factories
 
                     _previousMidiKey = msg.Data1;
                     _startedNoteIsClosed = false;
-                    //return note;
                 }
 
                 if (!_startedNoteIsClosed)
@@ -166,14 +165,14 @@ namespace DPA_Musicsheets.factories
                 note.letter = "c";
             }
 
-            if (KeyNumber == 1 && prevMidiKeyNumber == 0)
+            if (KeyNumber == 1 && prevMidiKeyNumber <= 1)
             {
                 note.letter = "c";
                 crossNote = new BaseNoteCross(note);
                 note = crossNote;
             }
 
-            if (KeyNumber == 1 && prevMidiKeyNumber == 2)
+            if (KeyNumber == 1 && prevMidiKeyNumber > 1)
             {
                 note.letter = "d";
                 moleNote = new BaseNoteMole(note);
@@ -185,14 +184,14 @@ namespace DPA_Musicsheets.factories
                 note.letter = "d";
             }
 
-            if (KeyNumber == 3 && prevMidiKeyNumber == 2)
+            if (KeyNumber == 3 && prevMidiKeyNumber <= 3)
             {
                 note.letter = "d";
                 crossNote = new BaseNoteCross(note);
                 note = crossNote;
             }
 
-            if (KeyNumber == 3 && prevMidiKeyNumber == 4)
+            if (KeyNumber == 3 && prevMidiKeyNumber > 3)
             {
                 note.letter = "e";
                 moleNote = new BaseNoteMole(note);
@@ -209,7 +208,7 @@ namespace DPA_Musicsheets.factories
                 note.letter = "f";
             }
 
-            if (KeyNumber == 6 && prevMidiKeyNumber == 5)
+            if (KeyNumber == 6 && prevMidiKeyNumber <= 6)
             {
                 note.letter = "f";
                 crossNote = new BaseNoteCross(note);
@@ -221,14 +220,14 @@ namespace DPA_Musicsheets.factories
                 note.letter = "g";
             }
 
-            if (KeyNumber == 8 && prevMidiKeyNumber == 7)
+            if (KeyNumber == 8 && prevMidiKeyNumber <= 8)
             {
                 note.letter = "g";
                 crossNote = new BaseNoteCross(note);
                 note = crossNote;
             }
 
-            if (KeyNumber == 8 && prevMidiKeyNumber == 9)
+            if (KeyNumber == 8 && prevMidiKeyNumber > 8)
             {
                 note.letter = "g";
                 moleNote = new BaseNoteMole(note);
@@ -240,14 +239,14 @@ namespace DPA_Musicsheets.factories
                 note.letter = "a";
             }
 
-            if (KeyNumber == 10 && prevMidiKeyNumber == 9)
+            if (KeyNumber == 10 && prevMidiKeyNumber  <= 10)
             {
                 note.letter = "a";
                 crossNote = new BaseNoteCross(note);
                 note = crossNote;
             }
 
-            if (KeyNumber == 10 && prevMidiKeyNumber == 11)
+            if (KeyNumber == 10 && prevMidiKeyNumber > 10)
             {
                 note.letter = "a";
                 moleNote = new BaseNoteMole(note);
@@ -346,7 +345,7 @@ namespace DPA_Musicsheets.factories
 
         private void CheckLowestNote(int midiKey)
         {
-            if (midiKey < _lowestKey)
+            if (midiKey < _lowestKey && midiKey > 10)
             {
                 _lowestKey = midiKey;
             }
