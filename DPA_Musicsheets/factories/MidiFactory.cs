@@ -66,7 +66,7 @@ namespace DPA_Musicsheets.factories
                 }
             }
 
-            if (_lowestKey > 60)
+            if (_lowestKey >= 60)
             {
                 clef = new Clef(2, ClefType.Gclef);
             }
