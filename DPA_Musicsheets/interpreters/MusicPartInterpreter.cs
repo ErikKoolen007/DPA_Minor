@@ -7,11 +7,16 @@ using DPA_Musicsheets.domain;
 
 namespace DPA_Musicsheets.interpreters
 {
-    interface MusicPartInterpreter
+    public abstract class MusicPartInterpreter
     {
-        MusicPart Interpret(string musicPartStr);
-        MusicPart Delegate(string musicPartStr);
-        string Inverseinterpret(MusicPart part);
-        string InverseDelegate(MusicPart part);
+        protected string _musicPartStr;
+        protected Queue<MusicPart> _domain = new Queue<MusicPart>();
+
+        public MusicPartInterpreter(string musicStr, Queue<MusicPart> domain)
+        {
+            _musicPartStr = musicStr;
+        }
+        protected abstract Queue<MusicPart> Delegate();
+        public abstract Queue<MusicPart> Interpret();
     }
 }

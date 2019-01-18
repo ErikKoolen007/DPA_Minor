@@ -94,14 +94,14 @@ namespace DPA_Musicsheets.Managers
 
             LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
 
-            //TODO: make a system to translate domain to WPF staffs
+            //TODO: make a system to translate _domain to WPF staffs
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
         /// <summary>
         /// This creates WPF staffs and MIDI from Lilypond.
         /// TODO: Remove the dependencies from one language to another. If we want to replace the WPF library with another for example, we have to rewrite all logic.
-        /// TODO: Create our own domain classes to be independent of external libraries/languages.
+        /// TODO: Create our own _domain classes to be independent of external libraries/languages.
         /// </summary>
         /// <param name="content"></param>
         public void LoadLilypondIntoWpfStaffsAndMidi(string content)
@@ -121,7 +121,7 @@ namespace DPA_Musicsheets.Managers
         #region Midi loading (loads midi to lilypond)
 
         /// <summary>
-        /// TODO: Create our own domain classes to be independent of external libraries/languages.
+        /// TODO: Create our own _domain classes to be independent of external libraries/languages.
         /// </summary>
         /// <param name="sequence"></param>
         /// <returns></returns>
@@ -426,7 +426,7 @@ namespace DPA_Musicsheets.Managers
         
         /// <summary>
         /// We create MIDI from WPF staffs, 2 different dependencies, not a good practice.
-        /// TODO: Create MIDI from our own domain classes.
+        /// TODO: Create MIDI from our own _domain classes.
         /// TODO: Our code doesn't support repeats (rendering notes multiple times) in midi yet. Maybe with a COMPOSITE this will be easier?
         /// </summary>
         /// <returns></returns>

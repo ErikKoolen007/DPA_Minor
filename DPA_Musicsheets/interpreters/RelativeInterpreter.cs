@@ -9,34 +9,28 @@ namespace DPA_Musicsheets.interpreters
 {
     class RelativeInterpreter : MusicPartInterpreter
     {
-        public MusicPart Interpret(string musicPartStr)
+        public RelativeInterpreter(string musicStr) : base(musicStr)
+        {
+        }
+
+        protected override Queue<MusicPart> Delegate()
+        {
+            MusicPartInterpreter next = new ClefInterpreter(_musicPartStr);
+            return next.Interpret();
+        }
+
+        public override Queue<MusicPart> Interpret()
         {
             int index;
-            if (musicPartStr.Contains("\\relative c'"))
+            if (_musicPartStr.Contains("\\relative c'"))
             {
-                index = musicPartStr.IndexOf("\\relative");
-                musicPartStr.Remove(0, index);
-                musicPartStr.Remove(index, 14);
-                musicPartStr.Remove(musicPartStr.Length - 1);
+                index = _musicPartStr.IndexOf("\\relative");
+                _musicPartStr.Remove(0, index);
+                _musicPartStr.Remove(index, 14);
+                _musicPartStr.Remove(_musicPartStr.Length - 1);
                 MusicPartWrapper wrapper = new MusicPartWrapper(null, WrapperType.Relative);
-                return wrapper;
             }
-            throw new EntryPointNotFoundException();
-        }
-
-        public MusicPart Delegate(string musicPartStr)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string Inverseinterpret(MusicPart part)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string InverseDelegate(MusicPart part)
-        {
-            throw new NotImplementedException();
+            return Delegate();
         }
     }
 }
