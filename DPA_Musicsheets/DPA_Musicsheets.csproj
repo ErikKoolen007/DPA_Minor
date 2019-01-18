@@ -128,6 +128,9 @@
     <Compile Include="factories\MidiFactory.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
+    <Compile Include="Memento\CareTaker.cs" />
+    <Compile Include="Memento\EditorMemento.cs" />
+    <Compile Include="Memento\LinkedListExtensions.cs" />
     <Compile Include="Models\LilypondToken.cs" />
     <Compile Include="Models\LilypondTokenKind.cs" />
     <Compile Include="ViewModels\MidiPlayerViewModel.cs" />

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DPA_Musicsheets.Memento;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -15,6 +16,7 @@ namespace DPA_Musicsheets.ViewModels
     {
         private MusicLoader _musicLoader;
         private MainViewModel _mainViewModel { get; set; }
+        private CareTaker _careTaker;
 
         private string _text;
         private string _previousText;
@@ -34,7 +36,8 @@ namespace DPA_Musicsheets.ViewModels
             {
                 if (!_waitingForRender && !_textChangedByLoad)
                 {
-                    _previousText = _text;
+                    //_previousText = _text;
+                    _careTaker.Save(new EditorMemento(value));
                 }
                 _text = value;
                 RaisePropertyChanged(() => LilypondText);
@@ -53,6 +56,7 @@ namespace DPA_Musicsheets.ViewModels
             _mainViewModel = mainViewModel;
             _musicLoader = musicLoader;
             _musicLoader.LilypondViewModel = this;
+            _careTaker = new CareTaker();
             
             _text = "Your lilypond text will appear here.";
         }
@@ -60,7 +64,8 @@ namespace DPA_Musicsheets.ViewModels
         public void LilypondTextLoaded(string text)
         {
             _textChangedByLoad = true;
-            LilypondText = _previousText = text;
+            _careTaker.Save(new EditorMemento(text));
+            LilypondText = text;
             _textChangedByLoad = false;
         }
 
@@ -94,9 +99,10 @@ namespace DPA_Musicsheets.ViewModels
         #region Commands for buttons like Undo, Redo and SaveAs
         public RelayCommand UndoCommand => new RelayCommand(() =>
         {
-            _nextText = LilypondText;
-            LilypondText = _previousText;
-            _previousText = null;
+            //_nextText = LilypondText;
+            LilypondText = _careTaker.Undo().EditorText;
+            //LilypondText = _previousText;
+            //_previousText = null;
         }, () => _previousText != null && _previousText != LilypondText);
 
         public RelayCommand RedoCommand => new RelayCommand(() =>
