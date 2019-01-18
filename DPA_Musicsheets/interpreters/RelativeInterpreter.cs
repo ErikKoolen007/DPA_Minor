@@ -9,14 +9,27 @@ namespace DPA_Musicsheets.interpreters
 {
     class RelativeInterpreter : MusicPartInterpreter
     {
-        public RelativeInterpreter(string musicStr) : base(musicStr)
+        public RelativeInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
         {
         }
 
         protected override Queue<MusicPart> Delegate()
         {
-            MusicPartInterpreter next = new ClefInterpreter(_musicPartStr);
-            return next.Interpret();
+            MusicPartInterpreter clefIntP = new ClefInterpreter(_musicPartStr, _domain);
+            _domain = clefIntP.Interpret();
+            _musicPartStr = clefIntP._musicPartStr;
+
+            MusicPartInterpreter timeIntP = new TimeInterpreter(_musicPartStr, _domain);
+            _domain = timeIntP.Interpret();
+            _musicPartStr = clefIntP._musicPartStr;
+
+            MusicPartInterpreter tempoIntP = new TempoInterpreter(_musicPartStr, _domain);
+            _domain = tempoIntP.Interpret();
+            _musicPartStr = clefIntP._musicPartStr;
+
+            MusicPartInterpreter repeatIntP = new RepeatInterpreter(_musicPartStr, _domain);
+            _domain = repeatIntP.Interpret();
+            _musicPartStr = repeatIntP._musicPartStr;
         }
 
         public override Queue<MusicPart> Interpret()

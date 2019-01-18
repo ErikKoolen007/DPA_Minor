@@ -11,14 +11,16 @@ namespace DPA_Musicsheets.interpreters
     class NoteInterpreter : MusicPartInterpreter 
     {
         private BaseNote _note = new Note("L", "D");
+        private Queue<MusicPart> tmpQueue = new Queue<MusicPart>(1);
 
-        public NoteInterpreter(string musicPartStr, MusicPartInterpreter innerInterpreter) : base(musicPartStr)
+        public NoteInterpreter(string musicPartStr, Queue<MusicPart> domain) : base(musicPartStr, domain)
         {
         }
 
         protected override Queue<MusicPart> Delegate()
         {
-            throw new NotImplementedException();
+            tmpQueue.Enqueue(_note);
+            return tmpQueue;
         }
 
         public override Queue<MusicPart> Interpret()

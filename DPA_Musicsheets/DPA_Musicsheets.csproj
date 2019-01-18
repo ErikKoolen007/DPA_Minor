@@ -126,10 +126,13 @@
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
     <Compile Include="factories\MidiFactory.cs" />
+    <Compile Include="interpreters\ClefInterpreter.cs" />
     <Compile Include="interpreters\MusicPartInterpreter.cs" />
     <Compile Include="interpreters\NoteInterpreter.cs" />
     <Compile Include="interpreters\RelativeInterpreter.cs" />
-    <Compile Include="interpreters\RestInterpreter.cs" />
+    <Compile Include="interpreters\RepeatInterpreter.cs" />
+    <Compile Include="interpreters\TempoInterpreter.cs" />
+    <Compile Include="interpreters\TimeInterpreter.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\LilypondToken.cs" />

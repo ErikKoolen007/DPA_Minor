@@ -9,14 +9,13 @@ namespace DPA_Musicsheets.interpreters
 {
     class ClefInterpreter : MusicPartInterpreter
     {
-        public ClefInterpreter(string musicStr) : base(musicStr)
+        public ClefInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
         {
         }
 
         protected override Queue<MusicPart> Delegate()
         {
-            MusicPartInterpreter next = new TimeInterpreter(_musicPartStr);
-            return next.Interpret();
+            return _domain;
         }
 
         public override Queue<MusicPart> Interpret()
@@ -39,7 +38,7 @@ namespace DPA_Musicsheets.interpreters
                     clef = new Clef(2, ClefType.Gclef);
                     _musicPartStr.Remove(index, 12);
                 }
-                domain.Enqueue(clef);
+                _domain.Enqueue(clef);
             }
 
             return Delegate();

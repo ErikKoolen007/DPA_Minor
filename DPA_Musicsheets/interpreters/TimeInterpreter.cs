@@ -9,14 +9,13 @@ namespace DPA_Musicsheets.interpreters
 {
     class TimeInterpreter : MusicPartInterpreter
     {
-        public TimeInterpreter(string musicStr) : base(musicStr)
+        public TimeInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
         {
         }
 
         protected override Queue<MusicPart> Delegate()
         {
-            MusicPartInterpreter next = new TempoInterpreter(_musicPartStr);
-            return next.Interpret();
+            return _domain;
         }
 
         public override Queue<MusicPart> Interpret()
@@ -28,7 +27,7 @@ namespace DPA_Musicsheets.interpreters
                 int beatsPerbar = _musicPartStr[index + 8];
                 _musicPartStr.Remove(index, 9);
                 Time time = new Time(beatNote, beatsPerbar);
-                domain.Enqueue(time);
+                _domain.Enqueue(time);
             }
             return Delegate();
         }

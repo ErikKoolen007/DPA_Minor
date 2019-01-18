@@ -9,7 +9,7 @@ namespace DPA_Musicsheets.interpreters
 {
     public abstract class MusicPartInterpreter
     {
-        protected string _musicPartStr;
+        public string _musicPartStr { get; set; }
         protected Queue<MusicPart> _domain = new Queue<MusicPart>();
 
         public MusicPartInterpreter(string musicStr, Queue<MusicPart> domain)
