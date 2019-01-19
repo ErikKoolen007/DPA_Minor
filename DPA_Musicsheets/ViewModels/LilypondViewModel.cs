@@ -70,6 +70,7 @@ namespace DPA_Musicsheets.ViewModels
             // If we were typing, we need to do things.
             if (!_textChangedByLoad)
             {
+                _mainViewModel.FileSaved = false;
                 _lastChange = DateTime.Now;
 
                 _mainViewModel.CurrentState = "Rendering...";
@@ -113,14 +114,17 @@ namespace DPA_Musicsheets.ViewModels
                 if (extension.EndsWith(".mid"))
                 {
                     _musicLoader.SaveToMidi(saveFileDialog.FileName);
+                    _mainViewModel.FileSaved = true;
                 }
                 else if (extension.EndsWith(".ly"))
                 {
                     _musicLoader.SaveToLilypond(saveFileDialog.FileName);
+                    _mainViewModel.FileSaved = true;
                 }
                 else if (extension.EndsWith(".pdf"))
                 {
                     _musicLoader.SaveToPDF(saveFileDialog.FileName);
+                    _mainViewModel.FileSaved = true;
                 }
                 else
                 {

@@ -6,6 +6,7 @@ using PSAMWPFControlLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ namespace DPA_Musicsheets.ViewModels
                 RaisePropertyChanged(() => FileName);
             }
         }
+
+        public bool FileSaved { get; set; } = true;
 
         /// <summary>
         /// The current state can be used to display some text.
@@ -80,9 +83,25 @@ namespace DPA_Musicsheets.ViewModels
             Console.WriteLine("Key Up");
         });
 
-        public ICommand OnWindowClosingCommand => new RelayCommand(() =>
+        public ICommand OnWindowClosingCommand => new RelayCommand<CancelEventArgs>(args =>
         {
-            ViewModelLocator.Cleanup();
+            if (!FileSaved)
+            {
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                    "The data has changed. Exit without saving?", "Confirm", System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    ViewModelLocator.Cleanup();
+                }
+                else
+                {
+                    args.Cancel = true;
+                }
+            }
+            else
+            {
+                ViewModelLocator.Cleanup();
+            }
         });
         #endregion Focus and key commands, these can be used for implementing hotkeys
     }
