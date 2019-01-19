@@ -9,16 +9,16 @@ namespace DPA_Musicsheets.interpreters
 {
     class TimeInterpreter : MusicPartInterpreter
     {
-        public TimeInterpreter(string musicStr, Queue<MusicPart> domain, string name = "TimeInterpreter") : base(musicStr, domain, name)
+        public TimeInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "TimeInterpreter") : base(musicStr, domain, name)
         {
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
             return _domain;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             if (_musicPartStr.Contains("\\time "))
             {
@@ -27,7 +27,7 @@ namespace DPA_Musicsheets.interpreters
                 int beatsPerbar = _musicPartStr[index + 8];
                 _musicPartStr = _musicPartStr.Remove(index, 9);
                 Time time = new Time(beatNote, beatsPerbar);
-                _domain.Enqueue(time);
+                _domain.AddLast(time);
             }
             return Delegate();
         }

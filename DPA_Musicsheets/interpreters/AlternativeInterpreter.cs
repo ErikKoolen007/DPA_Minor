@@ -16,11 +16,11 @@ namespace DPA_Musicsheets.interpreters
         private string _currentNote = "";
         private bool first;
         private bool last;
-        public AlternativeInterpreter(string musicStr, Queue<MusicPart> domain, string name = "AlternativeInterpreter") : base(musicStr, domain, name)
+        public AlternativeInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "AlternativeInterpreter") : base(musicStr, domain, name)
         {
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
             alternative = new MusicPartWrapper(content, WrapperType.Alternative);
             noteInterpreter._musicPartStr = _currentNote;
@@ -38,7 +38,7 @@ namespace DPA_Musicsheets.interpreters
             return _domain;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             if (_musicPartStr.Contains("\\alternative "))
             {
@@ -73,7 +73,7 @@ namespace DPA_Musicsheets.interpreters
                 }
             }
             alternative._symbols = content;
-            _domain.Enqueue(alternative);
+            _domain.AddLast(alternative);
             return _domain;
         }
 

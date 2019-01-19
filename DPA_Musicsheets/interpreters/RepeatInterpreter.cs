@@ -12,20 +12,20 @@ namespace DPA_Musicsheets.interpreters
         private NoteInterpreter noteInterpreter;
         private LinkedList<MusicPart> content = new LinkedList<MusicPart>();
         private string _currentNote = "";
-        public RepeatInterpreter(string musicStr, Queue<MusicPart> domain, string name = "RepeatInterpreter") : base(musicStr, domain, name)
+        public RepeatInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "RepeatInterpreter") : base(musicStr, domain, name)
         {
             noteInterpreter = new NoteInterpreter(_currentNote, domain);
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
             noteInterpreter._musicPartStr = _currentNote;
-            content.AddLast(noteInterpreter.Interpret().Dequeue());
+            content.AddLast(noteInterpreter.Interpret().First);
 
             return _domain;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             if (_musicPartStr.Contains("\\repeat "))
             {
@@ -53,7 +53,7 @@ namespace DPA_Musicsheets.interpreters
                     notesString = notesString.Remove(0, noteStrLength);
                 }
                 MusicPartWrapper repeat = new MusicPartWrapper(content, WrapperType.Repeat);
-                _domain.Enqueue(repeat);
+                _domain.AddLast(repeat);
             }
             return _domain;
         }

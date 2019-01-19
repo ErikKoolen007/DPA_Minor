@@ -11,27 +11,36 @@ namespace DPA_Musicsheets.interpreters
     {
         private LinkedList<MusicPart> content = new LinkedList<MusicPart>();
 
-        private Dictionary<int, string> interpreterOrder = new Dictionary<int, string>();
+        private SortedDictionary<int, MusicPartInterpreter> interpreterOrder = new SortedDictionary<int, MusicPartInterpreter>();
         private NoteInterpreter noteIntP;
         private MusicPartInterpreter clefIntP;
         private MusicPartInterpreter timeIntP;
         private MusicPartInterpreter tempoIntP;
         private MusicPartInterpreter repeatIntP;
         private MusicPartInterpreter alternativeIntP;
-        public RelativeInterpreter(string musicStr, Queue<MusicPart> domain, string name = "RelativeInterpreter") : base(musicStr, domain, name)
+        public RelativeInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "RelativeInterpreter") : base(musicStr, domain, name)
         {
             initInterpreters();
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
+            fillHashSet();
 
-            MusicPartWrapper relative = new MusicPartWrapper(content, WrapperType.Relative);
-            _domain.Enqueue(relative);
+            foreach (KeyValuePair<int, MusicPartInterpreter> entry in interpreterOrder)
+            {
+                // do something with entry.Value or entry.Key
+                _domain = entry.Value.Interpret();
+                _musicPartStr = entry.Value._musicPartStr;
+            }
+
+            MusicPartWrapper relative = new MusicPartWrapper(_domain, WrapperType.Relative);
+            _domain.Clear();
+            _domain.AddLast(relative);
             return _domain;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             int index;
 
@@ -67,7 +76,7 @@ namespace DPA_Musicsheets.interpreters
                 string sub = copyNoteStr.Substring(index+2 + 13);
                 if (!sub.Contains("{") && !sub.Contains("\\"))
                 {
-                    interpreterOrder.Add(index + 15, noteIntP._name);
+                    interpreterOrder.Add(index + 15, noteIntP);
                 }
 
                 if (index != -1)
@@ -80,7 +89,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\clef treble");
-                interpreterOrder.Add(index, clefIntP._name);
+                interpreterOrder.Add(index, clefIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -91,7 +100,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\clef bass");
-                interpreterOrder.Add(index, clefIntP._name);
+                interpreterOrder.Add(index, clefIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -102,7 +111,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\clef soprano");
-                interpreterOrder.Add(index, clefIntP._name);
+                interpreterOrder.Add(index, clefIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -113,7 +122,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\time");
-                interpreterOrder.Add(index, timeIntP._name);
+                interpreterOrder.Add(index, timeIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -124,7 +133,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\tempo");
-                interpreterOrder.Add(index, tempoIntP._name);
+                interpreterOrder.Add(index, tempoIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -135,7 +144,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\repeat");
-                interpreterOrder.Add(index, repeatIntP._name);
+                interpreterOrder.Add(index, repeatIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");
@@ -146,7 +155,7 @@ namespace DPA_Musicsheets.interpreters
             while (index != -1)
             {
                 index = copyStr.IndexOf("\\alternative");
-                interpreterOrder.Add(index, alternativeIntP._name);
+                interpreterOrder.Add(index, alternativeIntP);
                 if (index != -1)
                 {
                     copyStr = copyStr.Insert(index + 1, "xxx");

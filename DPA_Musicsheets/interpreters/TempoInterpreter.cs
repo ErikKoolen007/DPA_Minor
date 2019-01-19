@@ -10,16 +10,16 @@ namespace DPA_Musicsheets.interpreters
 {
     class TempoInterpreter : MusicPartInterpreter
     {
-        public TempoInterpreter(string musicStr, Queue<MusicPart> domain, string name = "TempoInterpreter") : base(musicStr, domain, name)
+        public TempoInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "TempoInterpreter") : base(musicStr, domain, name)
         {
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
             return _domain;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             if (_musicPartStr.Contains("\\tempo 4="))
             {
@@ -32,7 +32,7 @@ namespace DPA_Musicsheets.interpreters
                     int bpm = Int32.Parse(substr);
                     Tempo tempo  = new Tempo(bpm);
                     _musicPartStr = _musicPartStr.Remove(index, 12);
-                    _domain.Enqueue(tempo);
+                    _domain.AddLast(tempo);
                 }
                 catch (InvalidCastException)
                 {

@@ -12,27 +12,27 @@ namespace DPA_Musicsheets.interpreters
     {
         private BaseNote _note = new Note("L", "D");
         private Rest _r = null;
-        private Queue<MusicPart> tmpQueue = new Queue<MusicPart>(1);
+        private LinkedList<MusicPart> tmpQueue = new LinkedList<MusicPart>();
 
-        public NoteInterpreter(string musicPartStr, Queue<MusicPart> domain, string name = "NoteInterpreter") : base(musicPartStr, domain, name)
+        public NoteInterpreter(string musicPartStr, LinkedList<MusicPart> domain, string name = "NoteInterpreter") : base(musicPartStr, domain, name)
         {
         }
 
-        protected override Queue<MusicPart> Delegate()
+        protected override LinkedList<MusicPart> Delegate()
         {
             if (_r == null)
             {
-                tmpQueue.Enqueue(_note);
+                tmpQueue.AddLast(_note);
             }
             else
             {
-                tmpQueue.Enqueue(_r);
+                tmpQueue.AddLast(_r);
             }
             
             return tmpQueue;
         }
 
-        public override Queue<MusicPart> Interpret()
+        public override LinkedList<MusicPart> Interpret()
         {
             int index;
             if (_musicPartStr.Contains("r"))
