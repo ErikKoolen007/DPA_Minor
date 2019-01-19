@@ -10,7 +10,7 @@ namespace DPA_Musicsheets.interpreters
 {
     class TempoInterpreter : MusicPartInterpreter
     {
-        public TempoInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
+        public TempoInterpreter(string musicStr, Queue<MusicPart> domain, string name = "TempoInterpreter") : base(musicStr, domain, name)
         {
         }
 
@@ -31,7 +31,7 @@ namespace DPA_Musicsheets.interpreters
                     //maybe " " a problem?
                     int bpm = Int32.Parse(substr);
                     Tempo tempo  = new Tempo(bpm);
-                    _musicPartStr.Remove(index, 12);
+                    _musicPartStr = _musicPartStr.Remove(index, 12);
                     _domain.Enqueue(tempo);
                 }
                 catch (InvalidCastException)

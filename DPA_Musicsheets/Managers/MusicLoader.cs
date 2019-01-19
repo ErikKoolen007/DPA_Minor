@@ -336,7 +336,7 @@ namespace DPA_Musicsheets.Managers
                         break;
                     case LilypondTokenKind.Rest:
                         var restLength = Int32.Parse(currentToken.Value[1].ToString());
-                        //symbols.Add(new Rest((MusicalSymbolDuration)restLength));
+                        //_symbols.Add(new Rest((MusicalSymbolDuration)restLength));
                         break;
                     case LilypondTokenKind.Bar:
                         symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });

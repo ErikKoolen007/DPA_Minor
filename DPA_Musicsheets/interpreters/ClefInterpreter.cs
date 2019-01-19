@@ -9,7 +9,7 @@ namespace DPA_Musicsheets.interpreters
 {
     class ClefInterpreter : MusicPartInterpreter
     {
-        public ClefInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
+        public ClefInterpreter(string musicStr, Queue<MusicPart> domain, string name = "ClefInterpreter") : base(musicStr, domain, name)
         {
         }
 
@@ -27,16 +27,16 @@ namespace DPA_Musicsheets.interpreters
                 if (_musicPartStr.Contains("\\clef bass"))
                 {
                     clef = new Clef(4, ClefType.Fclef);
-                    _musicPartStr.Remove(index, 10);
+                    _musicPartStr = _musicPartStr.Remove(index, 10);
                 } else if (_musicPartStr.Contains("\\clef soprano"))
                 {
                     clef = new Clef(1, ClefType.Cclef);
-                    _musicPartStr.Remove(index, 13);
+                    _musicPartStr = _musicPartStr.Remove(index, 13);
                 }
                 else
                 {
                     clef = new Clef(2, ClefType.Gclef);
-                    _musicPartStr.Remove(index, 12);
+                    _musicPartStr = _musicPartStr.Remove(index, 12);
                 }
                 _domain.Enqueue(clef);
             }

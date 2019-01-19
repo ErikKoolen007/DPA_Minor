@@ -9,7 +9,7 @@ namespace DPA_Musicsheets.interpreters
 {
     class TimeInterpreter : MusicPartInterpreter
     {
-        public TimeInterpreter(string musicStr, Queue<MusicPart> domain) : base(musicStr, domain)
+        public TimeInterpreter(string musicStr, Queue<MusicPart> domain, string name = "TimeInterpreter") : base(musicStr, domain, name)
         {
         }
 
@@ -25,7 +25,7 @@ namespace DPA_Musicsheets.interpreters
                 int index = _musicPartStr.IndexOf("\\time ");
                 int beatNote = _musicPartStr[index + 6];
                 int beatsPerbar = _musicPartStr[index + 8];
-                _musicPartStr.Remove(index, 9);
+                _musicPartStr = _musicPartStr.Remove(index, 9);
                 Time time = new Time(beatNote, beatsPerbar);
                 _domain.Enqueue(time);
             }

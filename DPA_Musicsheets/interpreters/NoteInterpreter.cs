@@ -11,53 +11,70 @@ namespace DPA_Musicsheets.interpreters
     class NoteInterpreter : MusicPartInterpreter 
     {
         private BaseNote _note = new Note("L", "D");
+        private Rest _r = null;
         private Queue<MusicPart> tmpQueue = new Queue<MusicPart>(1);
 
-        public NoteInterpreter(string musicPartStr, Queue<MusicPart> domain) : base(musicPartStr, domain)
+        public NoteInterpreter(string musicPartStr, Queue<MusicPart> domain, string name = "NoteInterpreter") : base(musicPartStr, domain, name)
         {
         }
 
         protected override Queue<MusicPart> Delegate()
         {
-            tmpQueue.Enqueue(_note);
+            if (_r == null)
+            {
+                tmpQueue.Enqueue(_note);
+            }
+            else
+            {
+                tmpQueue.Enqueue(_r);
+            }
+            
             return tmpQueue;
         }
 
         public override Queue<MusicPart> Interpret()
         {
             int index;
+            if (_musicPartStr.Contains("r"))
+            {
+                index = _musicPartStr.IndexOf("r");
+                int duration = Int32.Parse(_musicPartStr.Substring(index + 1));
+                _musicPartStr = _musicPartStr.Remove(index);
+                _r = new Rest(duration);
+            }
+
             if (_musicPartStr.Contains("is"))
             {
                 index = _musicPartStr.IndexOf("is");
-                _musicPartStr.Remove(index, 2);
+                _musicPartStr = _musicPartStr.Remove(index, 2);
                 _note = new BaseNoteCross(_note);
             }
 
             if (_musicPartStr.Contains("es"))
             {
                 index = _musicPartStr.IndexOf("es");
-                _musicPartStr.Remove(index, 2);
+                _musicPartStr = _musicPartStr.Remove(index, 2);
                 _note = new BaseNoteMole(_note);
             }
 
             if (_musicPartStr.Contains("'"))
             {
                 index = _musicPartStr.IndexOf("'");
-                _musicPartStr.Remove(index, 1);
+                _musicPartStr = _musicPartStr.Remove(index, 1);
                 _note = new BaseNoteApostrophe(_note);
             }
 
             if (_musicPartStr.Contains(","))
             {
                 index = _musicPartStr.IndexOf(",");
-                _musicPartStr.Remove(index, 1);
+                _musicPartStr = _musicPartStr.Remove(index, 1);
                 _note = new BaseNoteComma(_note);
             }
 
             if (_musicPartStr.Contains("~"))
             {
                 index = _musicPartStr.IndexOf("~");
-                _musicPartStr.Remove(index, 1);
+                _musicPartStr = _musicPartStr.Remove(index, 1);
                 _note = new BaseNoteResound(_note);
             }
 
@@ -74,7 +91,7 @@ namespace DPA_Musicsheets.interpreters
             if (_musicPartStr.Contains("|"))
             {
                 index = _musicPartStr.IndexOf("|");
-                _musicPartStr.Remove(index, 1);
+                _musicPartStr = _musicPartStr.Remove(index, 1);
                 _note = new BaseNoteMark(_note);
             }
             //only letter and duration of the note are left
