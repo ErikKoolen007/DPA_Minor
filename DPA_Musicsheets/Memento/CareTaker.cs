@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.Memento
 {
@@ -31,16 +28,40 @@ namespace DPA_Musicsheets.Memento
 
         public EditorMemento Undo()
         {
-            _currentItem = _currentItem?.Previous ?? throw new IndexOutOfRangeException();
+            if (!CanUndo())
+            {
+                throw new IndexOutOfRangeException();
+            }
 
+            _currentItem = _currentItem.Previous;
             return _currentItem.Value;
         }
 
         public EditorMemento Redo()
         {
-            _currentItem = _currentItem?.Next ?? throw new IndexOutOfRangeException();
+            if (!CanRedo())
+            {
+                throw new IndexOutOfRangeException();
+            }
 
+            _currentItem = _currentItem.Next;
             return _currentItem.Value;
+        }
+
+        public bool CanUndo()
+        {
+            return _currentItem != null && _currentItem.Previous != null; 
+        }
+
+        public bool CanRedo()
+        {
+            return _currentItem != null && _currentItem.Next != null;
+        }
+
+        public void Clear()
+        {
+            _currentItem = null;
+            _mementoList.Clear();
         }
     }
 }
