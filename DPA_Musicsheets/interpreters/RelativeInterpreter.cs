@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.domain;
@@ -19,6 +20,9 @@ namespace DPA_Musicsheets.interpreters
         private MusicPartInterpreter alternativeIntP;
         public RelativeInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "RelativeInterpreter") : base(musicStr, domain, name)
         {
+
+            int index = _musicPartStr.IndexOf("relative");
+            _musicPartStr = _musicPartStr.Remove(0, index -1);
             initInterpreters();
         }
 
@@ -44,28 +48,32 @@ namespace DPA_Musicsheets.interpreters
                     notesArr = notesString.Split(null);
                     foreach (var n in notesArr)
                     {
-                        if (n == "|")
+                        if (n != "")
                         {
-                            try
+                            if (n == "|")
                             {
-                                BaseNote tmpN = (BaseNote) _domain.Last();
-                                BaseNoteMark newN = new BaseNoteMark(tmpN);
-                                _domain.RemoveLast();
-                                _domain.AddLast(newN);
+                                try
+                                {
+                                    BaseNote tmpN = (BaseNote)_domain.Last();
+                                    BaseNoteMark newN = new BaseNoteMark(tmpN);
+                                    _domain.RemoveLast();
+                                    _domain.AddLast(newN);
+                                }
+                                catch (InvalidCastException ex)
+                                {
+                                    Console.WriteLine(ex.StackTrace);
+                                }
                             }
-                            catch (InvalidCastException ex)
+                            else
                             {
-                                Console.WriteLine(ex.StackTrace);
+                                entry.Value._musicPartStr = n;
+                                LinkedList<MusicPart> tmpList = entry.Value.Interpret();
+                                MusicPart p = tmpList.First();
+                                tmpList.RemoveFirst();
+                                _domain.AddLast(p);
                             }
                         }
-                        else
-                        {
-                            entry.Value._musicPartStr = n;
-                            LinkedList<MusicPart> tmpList = entry.Value.Interpret();
-                            MusicPart p = tmpList.First();
-                            tmpList.RemoveFirst();
-                            _domain.AddLast(p);
-                        }
+
                     }
                 }
                 else
@@ -100,22 +108,33 @@ namespace DPA_Musicsheets.interpreters
         private void fillHashSet()
         {
             string copyStr = _musicPartStr;
-            string copyNoteStr = copyStr;
 
             int index = 0;
+            int i = copyStr.IndexOf("\\relative");
+            copyStr = copyStr.Remove(i, 14);
             while (index != -1)
             {
-                if (index != -1)
-                {
-                    string sub = copyNoteStr.Substring(index+2 + 12);
-
-                    if (!sub.Contains("{") && !sub.Contains("\\"))
+                try
+                {   
+                    if (i != -1 && !copyStr.Substring(i, 12).Contains("\\") && !copyStr.Substring(i, 12).Contains("{"))
                     {
-                        interpreterOrder.Add(index + 15, noteIntP);
+                        interpreterOrder.Add(i+10, noteIntP);
                     }
+                    else if (!copyStr.Contains("\\") && !copyStr.Contains("{") && copyStr != "")
+                    {
+                        interpreterOrder.Add(i+10, noteIntP);
+                    }
+                    i = copyStr.IndexOf("\\");
+                    copyStr = copyStr.Remove(i, 1);
 
-                    copyNoteStr = copyNoteStr.Remove(index, 1);
-                    index = copyNoteStr.IndexOf("\\");
+                    if (copyStr == "" || i + 10 > copyStr.Length)
+                    {
+                        index = -1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    break;
                 }
             }
 

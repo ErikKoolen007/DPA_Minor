@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.domain;
@@ -23,8 +24,13 @@ namespace DPA_Musicsheets.interpreters
             if (_musicPartStr.Contains("\\time "))
             {
                 int index = _musicPartStr.IndexOf("\\time ");
-                int beatNote = _musicPartStr[index + 6];
-                int beatsPerbar = _musicPartStr[index + 8];
+
+                string bNote = _musicPartStr.Substring(index + 6, 1);
+                string bPerBar = _musicPartStr.Substring(index + 8, 1);
+
+                int beatNote = Int32.Parse(bNote);
+                int beatsPerbar = Int32.Parse(bPerBar);
+
                 _musicPartStr = _musicPartStr.Remove(index, 9);
                 Time time = new Time(beatNote, beatsPerbar);
                 _domain.AddLast(time);

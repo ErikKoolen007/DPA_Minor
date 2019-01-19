@@ -24,12 +24,12 @@ namespace DPA_Musicsheets.interpreters
             if (_musicPartStr.Contains("\\tempo 4="))
             {
                 int index = _musicPartStr.IndexOf("\\tempo 4=");
-                string substr = _musicPartStr.Substring(index+8, 12);
-
+                string[] split = _musicPartStr.Split(null, 1);
+                split = split[0].Split("=".ToCharArray(), 2);
                 try
                 {
                     //maybe " " a problem?
-                    int bpm = Int32.Parse(substr);
+                    int bpm = Int32.Parse(split[1]);
                     Tempo tempo  = new Tempo(bpm);
                     _musicPartStr = _musicPartStr.Remove(index, 12);
                     _domain.AddLast(tempo);
