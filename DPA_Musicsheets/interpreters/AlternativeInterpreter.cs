@@ -26,7 +26,7 @@ namespace DPA_Musicsheets.interpreters
             noteInterpreter._musicPartStr = _currentNote;
 
             //either a rest or a note
-            MusicPart part = noteInterpreter.Interpret().Dequeue();
+            MusicPart part = noteInterpreter.Interpret().First();
             if (first)
                 alternative.WrapCurlyBraces(part, true);
 

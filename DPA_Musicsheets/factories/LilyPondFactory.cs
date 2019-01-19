@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.domain;
+using DPA_Musicsheets.interpreters;
 
 namespace DPA_Musicsheets.factories
 {
@@ -20,13 +21,12 @@ namespace DPA_Musicsheets.factories
         public override LinkedList<MusicPart> LoadIntoDomain()
         {
             string fileText =  OpenFile();
+            fileText = fileText.Replace("\r\n", "");
 
-            while (fileText != "")
-            {
+            RelativeInterpreter interpreter = new RelativeInterpreter(fileText, new LinkedList<MusicPart>());
+            content = interpreter.Interpret();
 
-            }
-
-            return null;
+            return content;
         }
 
         private string OpenFile()

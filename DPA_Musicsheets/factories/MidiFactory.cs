@@ -78,7 +78,8 @@ namespace DPA_Musicsheets.factories
             content.AddFirst(clef);
 
             MusicPartWrapper relativePart = new MusicPartWrapper(content, WrapperType.Relative);
-            content = relativePart._symbols;
+            content.Clear();
+            content.AddLast(relativePart);
 
             return content;
         }

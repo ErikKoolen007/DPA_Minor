@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,6 @@ namespace DPA_Musicsheets.interpreters
 {
     class RelativeInterpreter : MusicPartInterpreter
     {
-        private LinkedList<MusicPart> content = new LinkedList<MusicPart>();
-
         private SortedDictionary<int, MusicPartInterpreter> interpreterOrder = new SortedDictionary<int, MusicPartInterpreter>();
         private NoteInterpreter noteIntP;
         private MusicPartInterpreter clefIntP;
@@ -29,28 +28,62 @@ namespace DPA_Musicsheets.interpreters
 
             foreach (KeyValuePair<int, MusicPartInterpreter> entry in interpreterOrder)
             {
-                // do something with entry.Value or entry.Key
-                _domain = entry.Value.Interpret();
-                _musicPartStr = entry.Value._musicPartStr;
+                if(entry.Value.GetType() == typeof(NoteInterpreter))
+                {
+                    string notesString;
+                    string[] notesArr;
+                    if (_musicPartStr.IndexOf("\\") != -1)
+                    {
+                        int endIndex = _musicPartStr.IndexOf("\\");
+                        notesString = _musicPartStr.Substring(0, endIndex);
+                    }
+                    else
+                    {
+                        notesString = _musicPartStr.Substring(0);
+                    }
+                    notesArr = notesString.Split(null);
+                    foreach (var n in notesArr)
+                    {
+                        if (n == "|")
+                        {
+                            try
+                            {
+                                BaseNote tmpN = (BaseNote) _domain.Last();
+                                BaseNoteMark newN = new BaseNoteMark(tmpN);
+                                _domain.RemoveLast();
+                                _domain.AddLast(newN);
+                            }
+                            catch (InvalidCastException ex)
+                            {
+                                Console.WriteLine(ex.StackTrace);
+                            }
+                        }
+                        else
+                        {
+                            entry.Value._musicPartStr = n;
+                            LinkedList<MusicPart> tmpList = entry.Value.Interpret();
+                            MusicPart p = tmpList.First();
+                            tmpList.RemoveFirst();
+                            _domain.AddLast(p);
+                        }
+                    }
+                }
+                else
+                {
+                    entry.Value._musicPartStr = _musicPartStr;
+                    _domain = entry.Value.Interpret();
+                    _musicPartStr = entry.Value._musicPartStr;
+                }
             }
 
             MusicPartWrapper relative = new MusicPartWrapper(_domain, WrapperType.Relative);
-            _domain.Clear();
-            _domain.AddLast(relative);
-            return _domain;
+            LinkedList<MusicPart> relativeList = new LinkedList<MusicPart>();
+            relativeList.AddLast(relative);
+            return relativeList;
         }
 
         public override LinkedList<MusicPart> Interpret()
         {
-            int index;
-
-            if (_musicPartStr.Contains("\\relative c'"))
-            {
-                index = _musicPartStr.IndexOf("\\relative");
-                _musicPartStr = _musicPartStr.Remove(0, index+11);
-                index = _musicPartStr.LastIndexOf("}");
-                _musicPartStr = _musicPartStr.Remove(index);
-            }
             return Delegate();
         }
 
@@ -72,26 +105,27 @@ namespace DPA_Musicsheets.interpreters
             int index = 0;
             while (index != -1)
             {
-                index = copyNoteStr.IndexOf("\\");
-                string sub = copyNoteStr.Substring(index+2 + 13);
-                if (!sub.Contains("{") && !sub.Contains("\\"))
-                {
-                    interpreterOrder.Add(index + 15, noteIntP);
-                }
-
                 if (index != -1)
                 {
-                    copyNoteStr.Insert(index + 1, "xxx");
+                    string sub = copyNoteStr.Substring(index+2 + 12);
+
+                    if (!sub.Contains("{") && !sub.Contains("\\"))
+                    {
+                        interpreterOrder.Add(index + 15, noteIntP);
+                    }
+
+                    copyNoteStr = copyNoteStr.Remove(index, 1);
+                    index = copyNoteStr.IndexOf("\\");
                 }
             }
 
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\clef treble");
-                interpreterOrder.Add(index, clefIntP);
+                index = copyStr.IndexOf("clef treble");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -99,10 +133,10 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\clef bass");
-                interpreterOrder.Add(index, clefIntP);
+                index = copyStr.IndexOf("clef bass");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -110,10 +144,10 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\clef soprano");
-                interpreterOrder.Add(index, clefIntP);
+                index = copyStr.IndexOf("clef soprano");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -121,10 +155,10 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\time");
-                interpreterOrder.Add(index, timeIntP);
+                index = copyStr.IndexOf("time");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, timeIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -132,10 +166,10 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\tempo");
-                interpreterOrder.Add(index, tempoIntP);
+                index = copyStr.IndexOf("tempo");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, tempoIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -143,10 +177,10 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\repeat");
-                interpreterOrder.Add(index, repeatIntP);
+                index = copyStr.IndexOf("repeat");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, repeatIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
@@ -154,13 +188,18 @@ namespace DPA_Musicsheets.interpreters
             index = 0;
             while (index != -1)
             {
-                index = copyStr.IndexOf("\\alternative");
-                interpreterOrder.Add(index, alternativeIntP);
+                index = copyStr.IndexOf("alternative");
                 if (index != -1)
                 {
+                    interpreterOrder.Add(index, alternativeIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
                 }
             }
+
+            index = _musicPartStr.IndexOf("relative");
+            _musicPartStr = _musicPartStr.Remove(0, index + 15);
+            index = _musicPartStr.LastIndexOf("}");
+            _musicPartStr = _musicPartStr.Remove(index);
         }
     }
 }

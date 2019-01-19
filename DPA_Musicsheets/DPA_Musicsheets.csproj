@@ -126,6 +126,7 @@
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
     <Compile Include="factories\MidiFactory.cs" />
+    <Compile Include="interpreters\AlternativeInterpreter.cs" />
     <Compile Include="interpreters\ClefInterpreter.cs" />
     <Compile Include="interpreters\MusicPartInterpreter.cs" />
     <Compile Include="interpreters\NoteInterpreter.cs" />
