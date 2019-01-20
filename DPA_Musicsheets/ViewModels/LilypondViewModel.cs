@@ -33,6 +33,7 @@ namespace DPA_Musicsheets.ViewModels
                 RaisePropertyChanged(() => LilypondText);
             }
         }
+        public int CaretIndex { get; set; }
 
         private bool _textChangedByLoad = false;
         private bool _textChangedByMemento = false;
@@ -90,6 +91,12 @@ namespace DPA_Musicsheets.ViewModels
             }
         });
 
+        public ICommand SelectionChangedCommand => new RelayCommand<RoutedEventArgs>(args =>
+        {
+            TextBox textBox = (TextBox) args.Source;
+            CaretIndex = textBox.CaretIndex;
+        });
+
         #region Commands for buttons like Undo, Redo and SaveAs
         public RelayCommand UndoCommand => new RelayCommand(() =>
         {
@@ -132,6 +139,7 @@ namespace DPA_Musicsheets.ViewModels
                 }
             }
         });
+
         #endregion Commands for buttons like Undo, Redo and SaveAs
     }
 }
