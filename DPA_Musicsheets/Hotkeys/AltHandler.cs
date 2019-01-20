@@ -20,7 +20,11 @@ namespace DPA_Musicsheets.Hotkeys
                 if (key.Key.ToString() == "LeftAlt" || key.Key.ToString() == "RightCtrl")
                 {
                     if (!string.IsNullOrEmpty(hotkey) && i == 0)
+                    {
                         hotkey = "";
+                        SetKeysDownFalse(keysDown);
+                    }
+                        
 
                     hotkey += "Alt";
                     keysDown[key.Key] = true;

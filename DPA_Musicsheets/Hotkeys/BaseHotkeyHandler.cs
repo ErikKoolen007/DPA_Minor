@@ -19,5 +19,14 @@ namespace DPA_Musicsheets.Hotkeys
         }
 
         protected abstract string TryHandle(string hotkey, Dictionary<Key, bool> keysDown);
+
+        public void SetKeysDownFalse(Dictionary<Key, bool> keysDown)
+        {
+            for (int i = 0; i < keysDown.Count; i++)
+            {
+                var key = keysDown.ElementAt(i);
+                keysDown[key.Key] = false;
+            }
+        }
     }
 }

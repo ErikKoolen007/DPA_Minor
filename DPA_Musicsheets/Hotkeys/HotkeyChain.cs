@@ -37,6 +37,7 @@ namespace DPA_Musicsheets.Hotkeys
         public bool Handle(Dictionary<Key, bool> keysDown)
         {
             _hotkeyString = chain.Handle(_hotkeyString, keysDown);
+            Console.WriteLine(_hotkeyString);
             if (_hotkeyList.ContainsKey(_hotkeyString))
             {
                 _hotkeyList[_hotkeyString].Execute(_viewModelLocator);
@@ -51,13 +52,13 @@ namespace DPA_Musicsheets.Hotkeys
             _hotkeyList.Add("CtrlS", new SaveCommand());
             _hotkeyList.Add("CtrlO", new OpenFileCommand());
             _hotkeyList.Add("CtrlP", new SavePdfCommand());
-            _hotkeyList.Add("AltC", new InsertClefCommand());
+            _hotkeyList.Add("AltB", new InsertClefCommand());
             _hotkeyList.Add("AltS", new InsertTempoCommand());
             IKeyCommand time44Command = new InsertTime44Command();
             _hotkeyList.Add("AltT", time44Command);
-            _hotkeyList.Add("AltT4", time44Command);
-            _hotkeyList.Add("AltT3", new InsertTime34Command());
-            _hotkeyList.Add("AltT6", new InsertTime68Command());
+            _hotkeyList.Add("AltH4", time44Command);
+            _hotkeyList.Add("AltH3", new InsertTime34Command());
+            _hotkeyList.Add("AltH6", new InsertTime68Command());
         }
     }
 }
