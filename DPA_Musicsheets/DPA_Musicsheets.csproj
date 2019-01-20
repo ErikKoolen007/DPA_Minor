@@ -107,6 +107,17 @@
     <Compile Include="adapters\MetaTypeAdapter.cs" />
     <Compile Include="adapters\TempoAdaptee.cs" />
     <Compile Include="adapters\TimeSignatureAdaptee.cs" />
+    <Compile Include="composites\AbstractComposite.cs" />
+    <Compile Include="composites\BarLineComposite.cs" />
+    <Compile Include="composites\BaseNoteComposite.cs" />
+    <Compile Include="composites\ClefComposite.cs" />
+    <Compile Include="composites\RelativeComposite.cs" />
+    <Compile Include="composites\RestComposite.cs" />
+    <Compile Include="composites\SectionEndComposite.cs" />
+    <Compile Include="composites\SectionStartComposite.cs" />
+    <Compile Include="composites\TempoComposite.cs" />
+    <Compile Include="composites\TimeComposite.cs" />
+    <Compile Include="composites\WrapperComposite.cs" />
     <Compile Include="domain\BaseNoteSpace.cs" />
     <Compile Include="domain\Clef.cs" />
     <Compile Include="domain\MusicPartWrapper.cs" />
