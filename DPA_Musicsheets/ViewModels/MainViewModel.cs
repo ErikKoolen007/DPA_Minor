@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using DPA_Musicsheets.Hotkeys;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -44,12 +45,16 @@ namespace DPA_Musicsheets.ViewModels
             set { _currentState = value; RaisePropertyChanged(() => CurrentState); }
         }
 
-        private MusicLoader _musicLoader;
+        public MusicLoader MusicLoader;
+        private HotkeyChain _hotkeyChain;
+        private Dictionary<Key, bool> _keysDown;
 
         public MainViewModel(MusicLoader musicLoader)
         {
             // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer?
-            _musicLoader = musicLoader;
+            MusicLoader = musicLoader;
+            _hotkeyChain = new HotkeyChain();
+            _keysDown = new Dictionary<Key, bool>();
             FileName = @"Files/Alle-eendjes-zwemmen-in-het-water.mid";
         }
 
@@ -64,7 +69,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand LoadCommand => new RelayCommand(() =>
         {
-            _musicLoader.OpenFile(FileName);
+            MusicLoader.OpenFile(FileName);
         });
 
         #region Focus and key commands, these can be used for implementing hotkeys
@@ -75,6 +80,15 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand OnKeyDownCommand => new RelayCommand<KeyEventArgs>((e) =>
         {
+            if(!_keysDown.ContainsKey(e.Key) && !e.IsRepeat)
+                _keysDown.Add(e.Key, false);
+
+            if (_hotkeyChain.Handle(_keysDown))
+            {
+                e.Handled = true;
+                _keysDown.Clear();
+            }
+
             Console.WriteLine($"Key down: {e.Key}");
         });
 
