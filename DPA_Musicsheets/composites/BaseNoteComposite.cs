@@ -26,83 +26,83 @@ namespace DPA_Musicsheets.composites
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
-            //does this work or extra parameter needed?
-            string previousNote = symbols[0].MusicalCharacter.ToLower();
-            NoteTieType tie = NoteTieType.None;
-            if (this.note.letter.Contains("~"))
+            string letter = this.note.letter;
+            string duration = this.note.duration;
+            int index;
+
+            if (this.note.duration.Contains("}"))
             {
-                tie = NoteTieType.Stop;
-                var lastNote = symbols.Last(s => s is Note) as Note;
+                SectionEndComposite sectionEnd = new SectionEndComposite(this.note, true, ref _alternativeRepeatNumber);
 
-                if (lastNote != null) lastNote.TieType = NoteTieType.Start;
-                string temp = this.note.duration;
-                if (temp.Contains("|") || temp.Contains("}"))
+                index = duration.IndexOf("}");
+                duration = duration.Remove(index, 1);
+
+                symbols = sectionEnd.visit(symbols);
+            }
+
+            if (this.note.letter.Contains("{"))
+            {
+                SectionStartComposite sectionStart = new SectionStartComposite(this.note, ref _alternativeRepeatNumber);
+
+                index = duration.IndexOf("{");
+                duration = duration.Remove(index, 1);
+
+                symbols = sectionStart.visit(symbols);
+            }
+
+            if (this.note.duration.Contains("|"))
+            {
+                BarLineComposite barLineComposite = new BarLineComposite(_alternativeRepeatNumber);
+
+                index = duration.IndexOf("|");
+                duration = duration.Remove(index, 1);
+
+                symbols = barLineComposite.visit(symbols);
+            }
+
+            if (this.note.duration.Contains("."))
+            {
+                index = duration.IndexOf(".");
+                while (index != -1)
                 {
-
+                    duration = duration.Remove(index, 1);
                 }
             }
 
-            // Length
-            int noteLength = Int32.Parse(Regex.Match(currentToken.Value, @"\d+").Value);
-            // Crosses and Moles
-            int alter = 0;
-            alter += Regex.Matches(currentToken.Value, "is").Count;
-            alter -= Regex.Matches(currentToken.Value, "es|as").Count;
-            // Octaves
-            int distanceWithPreviousNote =
-                _notesOrder.IndexOf(currentToken.Value[0]) - _notesOrder.IndexOf(previousNote);
-            if (distanceWithPreviousNote > 3) // Shorter path possible the other way around
+            if (this.note.letter.Contains("~"))
             {
-                distanceWithPreviousNote -= 7; // The number of notes in an octave
-            }
-            else if (distanceWithPreviousNote < -3)
-            {
-                distanceWithPreviousNote += 7; // The number of notes in an octave
+                index = letter.IndexOf("~");
+                letter = letter.Remove(index, 1);
             }
 
-            if (distanceWithPreviousNote + _notesOrder.IndexOf(previousNote) >= 7)
+            if (this.note.letter.Contains(","))
             {
-                _previousOctave++;
-            }
-            else if (distanceWithPreviousNote + _notesOrder.IndexOf(previousNote) < 0)
-            {
-                _previousOctave--;
+                index = letter.IndexOf(",");
+                letter = letter.Remove(index, 1);
             }
 
-            // Force up or down.
-            _previousOctave += this.note.letter.Count(c => c == '\'');
-            _previousOctave -= this.note.letter.Count(c => c == ',');
+            if (this.note.letter.Contains("'"))
+            {
+                index = letter.IndexOf("'");
+                letter = letter.Remove(index, 1);
+            }
 
-            previousNote = this.note.letter;
+            if (this.note.letter.Contains("is"))
+            {
+                index = letter.IndexOf("is");
+                letter = letter.Remove(index, 1);
+            }
 
-            var note = new Note(currentToken.Value[0].ToString().ToUpper(), alter, _previousOctave,
-                (MusicalSymbolDuration) noteLength, NoteStemDirection.Up, tie,
-                new List<NoteBeamType>() {NoteBeamType.Single});
-            note.NumberOfDots += currentToken.Value.Count(c => c.Equals('.'));
-
-            symbols.Add(note);
-            return symbols;
+            if (this.note.letter.Contains("es"))
+            {
+                index = letter.IndexOf("es");
+                letter = letter.Remove(index, 1);
+            }
         }
 
         public void next(List<MusicalSymbol> symbols)
         {
-            if (note.duration.Contains("}"))
-            {
-                SectionEndComposite sectionEnd = new SectionEndComposite(note, true, ref _alternativeRepeatNumber);
-                symbols = sectionEnd.visit(symbols);
-            }
-
-            if (note.letter.Contains("{"))
-            {
-                SectionStartComposite sectionStart = new SectionStartComposite(note, ref _alternativeRepeatNumber);
-                symbols = sectionStart.visit(symbols);
-            }
-
-            if (note.duration.Contains("|"))
-            {
-                BarLineComposite barLineComposite = new BarLineComposite(_alternativeRepeatNumber);
-                symbols = barLineComposite.visit(symbols);
-            }
+            //structure does not go any deeper
         }
     }
 }
