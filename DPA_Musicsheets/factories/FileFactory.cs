@@ -11,6 +11,6 @@ namespace DPA_Musicsheets.factories
     public abstract class FileFactory
     {
         protected LinkedList<MusicPart> content { get; set; } = new LinkedList<MusicPart>();
-        public abstract LinkedList<MusicPart> LoadIntoDomain();
+        public abstract LinkedList<MusicPart> Load();
     }
 }

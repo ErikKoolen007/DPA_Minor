@@ -15,8 +15,8 @@ namespace DPA_Musicsheets.domain
     }
     class Clef : MusicPart
     {
-        private int lineNumber { get; set; }
-        private ClefType ClefType { get; set; }
+        public int lineNumber { get; set; }
+        public ClefType ClefType { get; set; }
 
 
         public Clef(int lineNumber, ClefType clefType)

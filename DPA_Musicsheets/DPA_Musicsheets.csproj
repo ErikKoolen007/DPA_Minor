@@ -116,6 +116,17 @@
     <Compile Include="Commands\OpenFileCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="Commands\SavePdfCommand.cs" />
+    <Compile Include="composites\AbstractComposite.cs" />
+    <Compile Include="composites\BarLineComposite.cs" />
+    <Compile Include="composites\BaseNoteComposite.cs" />
+    <Compile Include="composites\ClefComposite.cs" />
+    <Compile Include="composites\RelativeComposite.cs" />
+    <Compile Include="composites\RestComposite.cs" />
+    <Compile Include="composites\SectionEndComposite.cs" />
+    <Compile Include="composites\SectionStartComposite.cs" />
+    <Compile Include="composites\TempoComposite.cs" />
+    <Compile Include="composites\TimeComposite.cs" />
+    <Compile Include="composites\WrapperComposite.cs" />
     <Compile Include="domain\BaseNoteSpace.cs" />
     <Compile Include="domain\Clef.cs" />
     <Compile Include="domain\MusicPartWrapper.cs" />
@@ -135,6 +146,7 @@
     <Compile Include="factories\FileFactory.cs" />
     <Compile Include="factories\LilyPondFactory.cs" />
     <Compile Include="factories\MidiFactory.cs" />
+    <Compile Include="factories\WPFFactory.cs" />
     <Compile Include="Hotkeys\AltHandler.cs" />
     <Compile Include="Hotkeys\BaseHotkeyHandler.cs" />
     <Compile Include="Hotkeys\CharHandler.cs" />
