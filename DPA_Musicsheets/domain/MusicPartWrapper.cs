@@ -17,7 +17,7 @@ namespace DPA_Musicsheets.domain
 
     class MusicPartWrapper : MusicPart
     {
-        private WrapperType _type;
+        public WrapperType _type { get; }
         public LinkedList<MusicPart> _symbols { get; set; }
 
         public MusicPartWrapper(LinkedList<MusicPart> symbols, WrapperType type)

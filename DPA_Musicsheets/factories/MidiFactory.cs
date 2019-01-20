@@ -29,7 +29,7 @@ namespace DPA_Musicsheets.factories
         {
             this.file_name = file_name;
         }
-        public override LinkedList<MusicPart> LoadIntoDomain()
+        public override LinkedList<MusicPart> Load()
         {
             MusicPart clef;
             OpenFile();

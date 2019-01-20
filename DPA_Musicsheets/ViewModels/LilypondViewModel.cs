@@ -41,8 +41,6 @@ namespace DPA_Musicsheets.ViewModels
 
         public LilypondViewModel(MainViewModel mainViewModel, MusicLoader musicLoader)
         {
-            // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer and viewmodels don't know each other?
-            // And viewmodels don't 
             _mainViewModel = mainViewModel;
             _musicLoader = musicLoader;
             _musicLoader.LilypondViewModel = this;
