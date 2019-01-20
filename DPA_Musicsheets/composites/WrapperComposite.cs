@@ -20,16 +20,20 @@ namespace DPA_Musicsheets.composites
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
-            foreach (var part in wrapper._symbols)
+            if (wrapper._type == WrapperType.Repeat)
             {
-
+                symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward });
             }
+            next(symbols);
+            return symbols;
         }
 
         public void next(List<MusicalSymbol> symbols)
         {
-            //tree doesn't go any deeper
-            return;
+            foreach (var part in children)
+            {
+
+            }
         }
     }
 }

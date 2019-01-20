@@ -25,12 +25,7 @@ namespace DPA_Musicsheets.factories
 
             RelativeInterpreter interpreter = new RelativeInterpreter(fileText, new LinkedList<MusicPart>());
             content = interpreter.Interpret();
-//            StringBuilder sb = new StringBuilder();
-//            foreach (var element in content)
-//            {
-//                sb.Append(element.ToString());
-//            }
-//            string result = sb.ToString();
+
             return content;
         }
 

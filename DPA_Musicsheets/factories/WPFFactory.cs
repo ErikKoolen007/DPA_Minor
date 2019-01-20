@@ -67,12 +67,12 @@ namespace DPA_Musicsheets.factories
             {
                 switch (currentToken.TokenKind)
                 {
-//                    case LilypondTokenKind.Unknown:
-//                        break;
-                    case LilypondTokenKind.Repeat:
-                        inRepeat = true;
-                        symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward });
+                    case LilypondTokenKind.Unknown:
                         break;
+//                    case LilypondTokenKind.Repeat:
+//                        inRepeat = true;
+//                        symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward });
+//                        break;
 //                    case LilypondTokenKind.SectionEnd:
 //                        if (inRepeat && currentToken.NextToken?.TokenKind != LilypondTokenKind.Alternative)
 //                        {
@@ -96,7 +96,7 @@ namespace DPA_Musicsheets.factories
 //                            alternativeRepeatNumber++;
 //                            symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
 //                        }
-                        break;
+                        //break;
                     
 //                    case LilypondTokenKind.Alternative:
 //                        inAlternative = true;
