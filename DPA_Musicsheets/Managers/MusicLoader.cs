@@ -41,47 +41,39 @@ namespace DPA_Musicsheets.Managers
         public void OpenFile(string fileName)
         {
             FileFactory factory = null;
-            //just moved
+            StringBuilder sb = new StringBuilder();
+            LinkedList<MusicPart> parts;
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
-                //ONLY FOR TESTING
-                //-----------------------------------------------------------
-//                factory = new MidiFactory(fileName);
-//
-                //-----------------------------------------------------------
+                factory = new MidiFactory(fileName);
+                parts = factory.LoadIntoDomain();
+                foreach (var element in parts)
+                {
+                    sb.Append(element.ToString());
+                }
 
                 MidiSequence = new Sequence();
                 MidiSequence.Load(fileName);
 
                 MidiPlayerViewModel.MidiSequence = MidiSequence;
-                this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+                LilypondViewModel.LilypondTextLoaded(LilypondText);
             }
-            //------
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {
                 factory = new LilyPondFactory(fileName);
-                LinkedList<MusicPart> list = factory.LoadIntoDomain();
-                string result = list.First.Value.ToString();
-                Console.WriteLine("result");
-                //------------------------------------
-                StringBuilder sb = new StringBuilder();
-//                foreach (var line in File.ReadAllLines(fileName))
-//                {
-//                    sb.AppendLine(line);
-//                }
-//                
-//                this.LilypondText = sb.ToString();
-//                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+                parts = factory.LoadIntoDomain();
 
-                //--------------------------------------------
+                foreach (var element in parts)
+                {
+                    sb.Append(element.ToString());
+                }
             }
             else
             {
                 throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
             }
 
-            LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+            LilypondText = sb.ToString();
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
