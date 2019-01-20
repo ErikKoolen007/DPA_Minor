@@ -19,11 +19,6 @@ using Note = PSAMControlLibrary.Note;
 
 namespace DPA_Musicsheets.Managers
 {
-    /// <summary>
-    /// This is the one and only god class in the application.
-    /// It knows all about all file types, knows every viewmodel and contains all logic.
-    /// TODO: Clean this class up.
-    /// </summary>----
     public class MusicLoader
     {
         #region Properties
@@ -43,13 +38,6 @@ namespace DPA_Musicsheets.Managers
         public MidiPlayerViewModel MidiPlayerViewModel { get; set; }
         public StaffsViewModel StaffsViewModel { get; set; }
 
-        /// <summary>
-        /// Opens a file.
-        /// TODO: Remove the switch cases and delegate.
-        /// TODO: Remove the knowledge of filetypes. What if we want to support MusicXML later?
-        /// TODO: Remove the calling of the outer viewmodel layer. We want to be able reuse this in an ASP.NET Core application for example.
-        /// </summary>
-        /// <param name="fileName"></param>
         public void OpenFile(string fileName)
         {
             FileFactory factory = null;
@@ -94,17 +82,9 @@ namespace DPA_Musicsheets.Managers
             }
 
             LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
-
-            //TODO: make a system to translate _domain to WPF staffs
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
-        /// <summary>
-        /// This creates WPF staffs and MIDI from Lilypond.
-        /// TODO: Remove the dependencies from one language to another. If we want to replace the WPF library with another for example, we have to rewrite all logic.
-        /// TODO: Create our own _domain classes to be independent of external libraries/languages.
-        /// </summary>
-        /// <param name="content"></param>
         public void LoadLilypondIntoWpfStaffsAndMidi(string content)
         {
             LilypondText = content;
@@ -121,11 +101,6 @@ namespace DPA_Musicsheets.Managers
 
         #region Midi loading (loads midi to lilypond)
 
-        /// <summary>
-        /// TODO: Create our own _domain classes to be independent of external libraries/languages.
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <returns></returns>
         public string LoadMidiIntoLilypond(Sequence sequence)
         {
             StringBuilder lilypondContent = new StringBuilder();
@@ -145,9 +120,6 @@ namespace DPA_Musicsheets.Managers
                 foreach (var midiEvent in track.Iterator())
                 {
                     IMidiMessage midiMessage = midiEvent.MidiMessage;
-                    // TODO: Split this switch statements and create separate logic.
-                    // We want to split this so that we can expand our functionality later with new keywords for example.
-                    // Hint: Command pattern? Strategies? Factory method?
                     switch (midiMessage.MessageType)
                     {
                         case MessageType.Meta:
