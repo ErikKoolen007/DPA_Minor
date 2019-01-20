@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.domain;
+using DPA_Musicsheets.interpreters;
 
 namespace DPA_Musicsheets.factories
 {
     class LilyPondFactory : FileFactory
     {
         private string file_name;
+        private LinkedList<MusicPart> musicParts = new LinkedList<MusicPart>();
 
         public LilyPondFactory(string file_name)
         {
@@ -17,7 +20,28 @@ namespace DPA_Musicsheets.factories
         }
         public override LinkedList<MusicPart> LoadIntoDomain()
         {
-            return null;
+            string fileText =  OpenFile();
+            fileText = fileText.Replace("\r\n", "");
+
+            RelativeInterpreter interpreter = new RelativeInterpreter(fileText, new LinkedList<MusicPart>());
+            content = interpreter.Interpret();
+//            StringBuilder sb = new StringBuilder();
+//            foreach (var element in content)
+//            {
+//                sb.Append(element.ToString());
+//            }
+//            string result = sb.ToString();
+            return content;
+        }
+
+        private string OpenFile()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var line in File.ReadAllLines(file_name))
+            {
+                sb.AppendLine(line);
+            }
+            return sb.ToString();
         }
     }
 }

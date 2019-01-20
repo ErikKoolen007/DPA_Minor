@@ -19,11 +19,6 @@ using Note = PSAMControlLibrary.Note;
 
 namespace DPA_Musicsheets.Managers
 {
-    /// <summary>
-    /// This is the one and only god class in the application.
-    /// It knows all about all file types, knows every viewmodel and contains all logic.
-    /// TODO: Clean this class up.
-    /// </summary>----
     public class MusicLoader
     {
         #region Properties
@@ -43,27 +38,16 @@ namespace DPA_Musicsheets.Managers
         public MidiPlayerViewModel MidiPlayerViewModel { get; set; }
         public StaffsViewModel StaffsViewModel { get; set; }
 
-        /// <summary>
-        /// Opens a file.
-        /// TODO: Remove the switch cases and delegate.
-        /// TODO: Remove the knowledge of filetypes. What if we want to support MusicXML later?
-        /// TODO: Remove the calling of the outer viewmodel layer. We want to be able reuse this in an ASP.NET Core application for example.
-        /// </summary>
-        /// <param name="fileName"></param>
         public void OpenFile(string fileName)
         {
+            FileFactory factory = null;
             //just moved
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
                 //ONLY FOR TESTING
                 //-----------------------------------------------------------
-//                FileFactory factory = new MidiFactory(fileName);
-//                LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
+//                factory = new MidiFactory(fileName);
 //
-//                foreach (MusicPart part in domainResult)
-//                {
-//                    Console.WriteLine(part.ToString());
-//                }
                 //-----------------------------------------------------------
 
                 MidiSequence = new Sequence();
@@ -76,29 +60,31 @@ namespace DPA_Musicsheets.Managers
             //------
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {
+                factory = new LilyPondFactory(fileName);
+                LinkedList<MusicPart> list = factory.LoadIntoDomain();
+                string result = list.First.Value.ToString();
+                Console.WriteLine("result");
+                //------------------------------------
                 StringBuilder sb = new StringBuilder();
-                foreach (var line in File.ReadAllLines(fileName))
-                {
-                    sb.AppendLine(line);
-                }
-                
-                this.LilypondText = sb.ToString();
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+//                foreach (var line in File.ReadAllLines(fileName))
+//                {
+//                    sb.AppendLine(line);
+//                }
+//                
+//                this.LilypondText = sb.ToString();
+//                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+
+                //--------------------------------------------
             }
             else
             {
                 throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
             }
 
+            LinkedList<MusicPart> domainResult = factory.LoadIntoDomain();
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
-        /// <summary>
-        /// This creates WPF staffs and MIDI from Lilypond.
-        /// TODO: Remove the dependencies from one language to another. If we want to replace the WPF library with another for example, we have to rewrite all logic.
-        /// TODO: Create our own domain classes to be independent of external libraries/languages.
-        /// </summary>
-        /// <param name="content"></param>
         public void LoadLilypondIntoWpfStaffsAndMidi(string content)
         {
             LilypondText = content;
@@ -115,11 +101,6 @@ namespace DPA_Musicsheets.Managers
 
         #region Midi loading (loads midi to lilypond)
 
-        /// <summary>
-        /// TODO: Create our own domain classes to be independent of external libraries/languages.
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <returns></returns>
         public string LoadMidiIntoLilypond(Sequence sequence)
         {
             StringBuilder lilypondContent = new StringBuilder();
@@ -139,9 +120,6 @@ namespace DPA_Musicsheets.Managers
                 foreach (var midiEvent in track.Iterator())
                 {
                     IMidiMessage midiMessage = midiEvent.MidiMessage;
-                    // TODO: Split this switch statements and create separate logic.
-                    // We want to split this so that we can expand our functionality later with new keywords for example.
-                    // Hint: Command pattern? Strategies? Factory method?
                     switch (midiMessage.MessageType)
                     {
                         case MessageType.Meta:
@@ -331,7 +309,7 @@ namespace DPA_Musicsheets.Managers
                         break;
                     case LilypondTokenKind.Rest:
                         var restLength = Int32.Parse(currentToken.Value[1].ToString());
-                        //symbols.Add(new Rest((MusicalSymbolDuration)restLength));
+                        //_symbols.Add(new Rest((MusicalSymbolDuration)restLength));
                         break;
                     case LilypondTokenKind.Bar:
                         symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
@@ -421,7 +399,7 @@ namespace DPA_Musicsheets.Managers
         
         /// <summary>
         /// We create MIDI from WPF staffs, 2 different dependencies, not a good practice.
-        /// TODO: Create MIDI from our own domain classes.
+        /// TODO: Create MIDI from our own _domain classes.
         /// TODO: Our code doesn't support repeats (rendering notes multiple times) in midi yet. Maybe with a COMPOSITE this will be easier?
         /// </summary>
         /// <returns></returns>

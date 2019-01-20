@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PSAMControlLibrary;
 
 namespace DPA_Musicsheets.domain
 {
@@ -12,43 +14,65 @@ namespace DPA_Musicsheets.domain
         Repeat = 1,
         Alternative = 2
     }
+
     class MusicPartWrapper : MusicPart
     {
-        private WrapperType type;
-        public LinkedList<MusicPart> symbols { get; set; }
+        private WrapperType _type;
+        public LinkedList<MusicPart> _symbols { get; set; }
+
         public MusicPartWrapper(LinkedList<MusicPart> symbols, WrapperType type)
         {
-            this.type = type;
-            this.symbols = symbols;
+            _type = type;
+            _symbols = symbols;
         }
 
         public override string ToString()
         {
             StringBuilder listContent = new StringBuilder();
 
-            foreach (MusicPart part in symbols)
+            foreach (MusicPart part in _symbols)
             {
                 listContent.Append(part.ToString());
             }
 
-            switch (type)
+            switch (_type)
             {
                 case WrapperType.Alternative:
                     return "\\alternative { \n" + listContent.ToString() + "\n }";
                 case WrapperType.Repeat:
-                    return "\\repeat volta { \n" + listContent.ToString() + "\n }";
+                    return "\\repeat volta 2 { \n" + listContent.ToString() + "\n }";
                 default:
                     return "\\relative c' { \n" + listContent.ToString() + "\n | }";
             }
         }
 
-        public void WrapAlternative(BaseNote start, BaseNote end)
+        public MusicPart WrapCurlyBraces(MusicPart part, bool open)
         {
-            if (type != WrapperType.Alternative)
-                return;
+            if (part.GetType() == typeof(Rest))
+            {
+                Rest r;
+                r = (Rest)part;
 
-            start.letter = "{ " + start.letter;
-            end.duration = end.duration + " }";
+                if (open)
+                    r.letter = "{ " + r.letter;
+                else
+                    r.duration = r.duration + " } ";
+                return r;
+            }
+
+            if (part.GetType().BaseType == typeof(BaseNote))
+            {
+                BaseNote n;
+                n = (BaseNote) part;
+
+                if (open)
+                    n.letter = "{ " + n.letter;
+                else
+                    n.duration = n.duration + " } ";
+                return n;
+            }
+
+            return part;
         }
     }
 }

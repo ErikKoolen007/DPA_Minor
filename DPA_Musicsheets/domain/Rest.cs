@@ -8,14 +8,15 @@ namespace DPA_Musicsheets.domain
 {
     class Rest : MusicPart
     {
-        private int duration;
+        public string letter { get; set; }= "r";
+        public string duration { get; set; }
         public Rest(int duration)
         {
-            this.duration = duration;
+            this.duration = duration.ToString();
         }
         public string ToString()
         {
-            return "r" + duration + " ";
+            return letter + duration + " ";
         }
     }
 }

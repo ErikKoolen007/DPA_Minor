@@ -32,7 +32,7 @@ namespace DPA_Musicsheets.factories
         public override LinkedList<MusicPart> LoadIntoDomain()
         {
             MusicPart clef;
-            open_file();
+            OpenFile();
 
             for (int i = 0; i < seq.Count(); i++)
             {
@@ -78,12 +78,13 @@ namespace DPA_Musicsheets.factories
             content.AddFirst(clef);
 
             MusicPartWrapper relativePart = new MusicPartWrapper(content, WrapperType.Relative);
-            content = relativePart.symbols;
+            content.Clear();
+            content.AddLast(relativePart);
 
             return content;
         }
 
-        private void open_file()
+        private void OpenFile()
         {
             seq = new Sequence();
             seq.Load(file_name);

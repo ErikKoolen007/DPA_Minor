@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DPA_Musicsheets.Managers
 {
     /// <summary>
-    /// TODO: Static classes with static helper methods are not done. Can a better domain class help with this?
+    /// TODO: Static classes with static helper methods are not done. Can a better _domain class help with this?
     /// </summary>
     public static class MidiToLilyHelper
     {

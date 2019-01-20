@@ -32,10 +32,10 @@ namespace DPA_Musicsheets.ViewModels
         }
 
         /// <summary>
-        /// SetStaffs fills the observablecollection with new symbols. 
+        /// SetStaffs fills the observablecollection with new _symbols. 
         /// We don't want to reset the collection because we don't want other classes to create an observable collection.
         /// </summary>
-        /// <param name="symbols">The new symbols to show.</param>
+        /// <param name="symbols">The new _symbols to show.</param>
         public void SetStaffs(IList<MusicalSymbol> symbols)
         {
             Staffs.Clear();
