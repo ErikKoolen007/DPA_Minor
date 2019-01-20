@@ -77,11 +77,10 @@ namespace DPA_Musicsheets.factories
 
             content.AddFirst(clef);
 
-            MusicPartWrapper relativePart = new MusicPartWrapper(content, WrapperType.Relative);
-            content.Clear();
-            content.AddLast(relativePart);
-
-            return content;
+            MusicPartWrapper relativePart = new MusicPartWrapper(content, WrapperType.Relative);            
+            LinkedList<MusicPart> relativeList = new LinkedList<MusicPart>();
+            relativeList.AddLast(relativePart);
+            return relativeList;
         }
 
         private void OpenFile()

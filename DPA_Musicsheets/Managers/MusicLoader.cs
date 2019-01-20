@@ -59,8 +59,6 @@ namespace DPA_Musicsheets.Managers
                     sb.Append(e);
                     LilypondText = sb.ToString();
                 }
-
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             }
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {
@@ -72,14 +70,12 @@ namespace DPA_Musicsheets.Managers
                     sb.Append(e.ToString());
                 }
                 LilypondText= sb.ToString();
-
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             }
             else
             {
                 throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
             }
-            //TODO: replace with the RELATIVECOMPOSITE which is the root of the composite structure
+            this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
