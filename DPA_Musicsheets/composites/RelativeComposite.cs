@@ -5,22 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using DPA_Musicsheets.composites;
 using DPA_Musicsheets.domain;
+using PSAMControlLibrary;
+using Clef = DPA_Musicsheets.domain.Clef;
+using Rest = DPA_Musicsheets.domain.Rest;
 
 namespace DPA_Musicsheets
 {
     class RelativeComposite : AbstractComposite
     {
-        MusicPartWrapper _relative;
-        public RelativeComposite(MusicPartWrapper relative)
+        private MusicPartWrapper _relative;
+        private int _alternativeRepeatNumber;
+        public RelativeComposite(MusicPartWrapper relative, ref int alternativeRepeatNumber)
         {
             _relative = relative;
-        }
-        public void visit()
-        {
-            next();
+            _alternativeRepeatNumber = alternativeRepeatNumber;
         }
 
-        public void next()
+        public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
+        {
+            next(symbols);
+            return symbols;
+        }
+
+        public void next(List<MusicalSymbol> symbols)
         {
             foreach (var part in _relative._symbols)
             {
@@ -28,27 +35,32 @@ namespace DPA_Musicsheets
                 {
                     Clef clef = (Clef) part;
                     ClefComposite clefComposite = new ClefComposite(clef);
-                    clefComposite.visit();
+                    symbols = clefComposite.visit(symbols);
                 } else if (part.GetType() == typeof(Time))
                 {
                     Time time = (Time) part;
                     TimeComposite timeComposite = new TimeComposite(time);
-                    timeComposite.visit();
+                    symbols = timeComposite.visit(symbols);
                 } else if (part.GetType() == typeof(Tempo))
                 {
                     Tempo tempo = (Tempo) part;
                     TempoComposite tempoComposite = new TempoComposite(tempo);
-                    tempoComposite.visit();
+                    symbols = tempoComposite.visit(symbols);
                 } else if (part.GetType().BaseType == typeof(BaseNote))
                 {
                     BaseNote note = (BaseNote) part;
                     BaseNoteComposite noteComposite = new BaseNoteComposite(note);
-                    noteComposite.visit();
+                    symbols = noteComposite.visit(symbols);
+                } else if (part.GetType() == typeof(Rest))
+                {
+                    Rest rest = (Rest) part;
+                    RestComposite restComposite = new RestComposite(rest, ref _alternativeRepeatNumber);
+                    symbols = restComposite.visit(symbols);
                 } else if (part.GetType() == typeof(MusicPartWrapper))
                 {
                     MusicPartWrapper wrapper = (MusicPartWrapper) part;
                     WrapperComposite wrapperComposite = new WrapperComposite(wrapper);
-                    wrapperComposite.visit();
+                    symbols = wrapperComposite.visit(symbols);
                 }
             }
         }

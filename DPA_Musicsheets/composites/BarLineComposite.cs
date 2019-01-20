@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DPA_Musicsheets.domain;
 using PSAMControlLibrary;
 
 namespace DPA_Musicsheets.composites
 {
-    class TempoComposite : AbstractComposite
+    class BarLineComposite : AbstractComposite
     {
-        private Tempo tempo;
+        private int _alternativeRepeatNumber;
 
-        public TempoComposite(Tempo tempo)
+        public BarLineComposite(int alternativeRepeatNumber)
         {
-            this.tempo = tempo;
+            _alternativeRepeatNumber = alternativeRepeatNumber;
         }
+
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
-            //not supported - as it already was
-            next(symbols);
+            symbols.Add(new Barline() { AlternateRepeatGroup = _alternativeRepeatNumber });
             return symbols;
         }
 
         public void next(List<MusicalSymbol> symbols)
         {
-            //tree doesn't go any deeper
+            //not possible to go any deeper
+            return;
         }
     }
 }

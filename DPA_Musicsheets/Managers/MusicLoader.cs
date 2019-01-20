@@ -44,12 +44,12 @@ namespace DPA_Musicsheets.Managers
             if (Path.GetExtension(fileName).EndsWith(".mid"))
             {
 
-//                MidiSequence = new Sequence();
-//                MidiSequence.Load(fileName);
-//
-//                MidiPlayerViewModel.MidiSequence = MidiSequence;
-//                this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
-//                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+                MidiSequence = new Sequence();
+                MidiSequence.Load(fileName);
+
+                MidiPlayerViewModel.MidiSequence = MidiSequence;
+                factory = new MidiFactory(fileName);
+                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
             }
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
             {

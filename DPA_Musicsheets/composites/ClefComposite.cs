@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DPA_Musicsheets.domain;
+using PSAMControlLibrary;
+using Clef = DPA_Musicsheets.domain.Clef;
 
 namespace DPA_Musicsheets.composites
 {
@@ -15,15 +16,26 @@ namespace DPA_Musicsheets.composites
         {
             this.clef = clef;
         }
-
-        public void visit()
+        public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
-            throw new NotImplementedException();
+            PSAMControlLibrary.Clef currentClef;
+            if (clef.ClefType == domain.ClefType.Gclef)
+                currentClef = new PSAMControlLibrary.Clef(ClefType.GClef, 2);
+            else if (clef.ClefType == domain.ClefType.Fclef)
+                currentClef = new PSAMControlLibrary.Clef(ClefType.FClef, 4);
+            else if (clef.ClefType == domain.ClefType.Cclef)
+                currentClef = new PSAMControlLibrary.Clef(ClefType.CClef, 3);
+            else
+                throw new NotSupportedException($"Clef is not supported.");
+            symbols.Add(currentClef);
+            next(symbols);
+            return symbols;
         }
 
-        public void next()
+        public void next(List<MusicalSymbol> symbols)
         {
-            throw new NotImplementedException();
+            //tree doesn't go any deeper
+            return;
         }
     }
 }

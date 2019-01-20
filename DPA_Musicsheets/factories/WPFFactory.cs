@@ -67,41 +67,42 @@ namespace DPA_Musicsheets.factories
             {
                 switch (currentToken.TokenKind)
                 {
-                    case LilypondTokenKind.Unknown:
-                        break;
+//                    case LilypondTokenKind.Unknown:
+//                        break;
                     case LilypondTokenKind.Repeat:
                         inRepeat = true;
                         symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward });
                         break;
-                    case LilypondTokenKind.SectionEnd:
-                        if (inRepeat && currentToken.NextToken?.TokenKind != LilypondTokenKind.Alternative)
-                        {
-                            inRepeat = false;
-                            symbols.Add(new Barline() { RepeatSign = RepeatSignType.Backward, AlternateRepeatGroup = alternativeRepeatNumber });
-                        }
-                        else if (inAlternative && alternativeRepeatNumber == 1)
-                        {
-                            alternativeRepeatNumber++;
-                            symbols.Add(new Barline() { RepeatSign = RepeatSignType.Backward, AlternateRepeatGroup = alternativeRepeatNumber });
-                        }
-                        else if (inAlternative && currentToken.NextToken.TokenKind == LilypondTokenKind.SectionEnd)
-                        {
-                            inAlternative = false;
-                            alternativeRepeatNumber = 0;
-                        }
+//                    case LilypondTokenKind.SectionEnd:
+//                        if (inRepeat && currentToken.NextToken?.TokenKind != LilypondTokenKind.Alternative)
+//                        {
+//                            inRepeat = false;
+//                            symbols.Add(new Barline() { RepeatSign = RepeatSignType.Backward, AlternateRepeatGroup = alternativeRepeatNumber });
+//                        }
+//                        else if (inAlternative && alternativeRepeatNumber == 1)
+//                        {
+//                            alternativeRepeatNumber++;
+//                            symbols.Add(new Barline() { RepeatSign = RepeatSignType.Backward, AlternateRepeatGroup = alternativeRepeatNumber });
+//                        }
+//                        else if (inAlternative && currentToken.NextToken.TokenKind == LilypondTokenKind.SectionEnd)
+//                        {
+//                            inAlternative = false;
+//                            alternativeRepeatNumber = 0;
+//                        }
+//                        break;
+//                    case LilypondTokenKind.SectionStart:
+//                        if (inAlternative && currentToken.PreviousToken.TokenKind != LilypondTokenKind.SectionEnd)
+//                        {
+//                            alternativeRepeatNumber++;
+//                            symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
+//                        }
                         break;
-                    case LilypondTokenKind.SectionStart:
-                        if (inAlternative && currentToken.PreviousToken.TokenKind != LilypondTokenKind.SectionEnd)
-                        {
-                            alternativeRepeatNumber++;
-                            symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
-                        }
-                        break;
-                    case LilypondTokenKind.Alternative:
-                        inAlternative = true;
-                        inRepeat = false;
-                        currentToken = currentToken.NextToken; // Skip the first bracket open.
-                        break;
+                    
+//                    case LilypondTokenKind.Alternative:
+//                        inAlternative = true;
+//                        inRepeat = false;
+//                        currentToken = currentToken.NextToken; // Skip the first bracket open.
+//                        break;
                     case LilypondTokenKind.Note:
                         NoteTieType tie = NoteTieType.None;
                         if (currentToken.Value.StartsWith("~"))
@@ -148,34 +149,13 @@ namespace DPA_Musicsheets.factories
 
                         symbols.Add(note);
                         break;
-                    case LilypondTokenKind.Rest:
-                        var restLength = Int32.Parse(currentToken.Value[1].ToString());
-                        symbols.Add(new Rest((MusicalSymbolDuration)restLength));
-                        break;
-                    case LilypondTokenKind.Bar:
-                        symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
-                        break;
-                    case LilypondTokenKind.Clef:
-                        currentToken = currentToken.NextToken;
-                        if (currentToken.Value == "treble")
-                            currentClef = new Clef(ClefType.GClef, 2);
-                        else if (currentToken.Value == "bass")
-                            currentClef = new Clef(ClefType.FClef, 4);
-                        else if (currentToken.Value == "soprano")
-                            currentClef = new Clef(ClefType.CClef, 3);
-                        else
-                            throw new NotSupportedException($"Clef {currentToken.Value} is not supported.");
-
-                        symbols.Add(currentClef);
-                        break;
-                    case LilypondTokenKind.Time:
-                        currentToken = currentToken.NextToken;
-                        var times = currentToken.Value.Split('/');
-                        symbols.Add(new TimeSignature(TimeSignatureType.Numbers, UInt32.Parse(times[0]), UInt32.Parse(times[1])));
-                        break;
-                    case LilypondTokenKind.Tempo:
-                        // Tempo not supported
-                        break;
+//                    case LilypondTokenKind.Rest:
+//                        var restLength = Int32.Parse(currentToken.Value[1].ToString());
+//                        symbols.Add(new Rest((MusicalSymbolDuration)restLength));
+//                        break;
+//                    case LilypondTokenKind.Bar:
+//                        symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
+//                        break;
                     default:
                         break;
                 }
