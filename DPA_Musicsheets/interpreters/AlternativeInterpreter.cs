@@ -11,10 +11,12 @@ namespace DPA_Musicsheets.interpreters
     class AlternativeInterpreter : MusicPartInterpreter
     {
         private NoteInterpreter noteInterpreter;
+        private MusicPartWrapper alternative = new MusicPartWrapper(null, WrapperType.Alternative);
+
         private LinkedList<MusicPart> content = new LinkedList<MusicPart>();
-        private MusicPartWrapper alternative = null;
-        private bool first;
-        private bool last;
+
+        private bool _wrapFirst;
+        private bool _wrapLast;
         public AlternativeInterpreter(string musicStr, LinkedList<MusicPart> domain, string name = "AlternativeInterpreter") : base(musicStr, domain, name)
         {
             noteInterpreter = new NoteInterpreter("", domain);
@@ -24,6 +26,14 @@ namespace DPA_Musicsheets.interpreters
         {
             LinkedList<MusicPart> tmpList = noteInterpreter.Interpret();
             MusicPart p = tmpList.First();
+
+            if(_wrapFirst)
+                p = alternative.WrapCurlyBraces(p, true);
+                _wrapFirst = false;
+            if(_wrapLast)
+                content.Last.Value = alternative.WrapCurlyBraces(content.Last.Value, false);
+                _wrapLast = false;
+
             tmpList.RemoveFirst();
             content.AddLast(p);
 
@@ -37,12 +47,19 @@ namespace DPA_Musicsheets.interpreters
                 string notesString;
                 string[] notesArr;
                 int endIndex = _musicPartStr.IndexOf("}  }");
-                notesString = _musicPartStr.Substring(0, endIndex);
+                notesString = _musicPartStr.Substring(_musicPartStr.IndexOf("\\alternative")+14, endIndex-12);
 
                 notesArr = notesString.Split(null);
                 foreach (var n in notesArr)
-                {
-                    if (n != "" && n != "{" && n != "}" && !n.Contains("alternative"))
+                { 
+
+                    if (n.Contains("{"))
+                        _wrapFirst = true;
+
+                    if (n.Contains("}"))
+                        _wrapLast = true;
+
+                    if (n != "{" && n != "}" && n != "" && !n.Contains("alternative"))
                     {
                         if (n == "|")
                         {
@@ -66,54 +83,14 @@ namespace DPA_Musicsheets.interpreters
                         }
                     }
                 }
+                //append the } for the last element
+                content.Last.Value = alternative.WrapCurlyBraces(content.Last.Value, false);
 
-                //                int index = _musicPartStr.IndexOf("\\alternative ");
-                //                int aOpen = index + 13;
-                //                int aClosed = _musicPartStr.IndexOf("} }") + 2;
-                //                string alternativeString = _musicPartStr.Substring(aOpen + 1, aClosed - 1);
-                //                _musicPartStr = _musicPartStr.Remove(index, aClosed + 1);
-                //
-                //                while(alternativeString != "")
-                //                {
-                //                    int sOpen = alternativeString.IndexOf("{");
-                //                    int sClosed = alternativeString.IndexOf("}");
-                //                    string notesString = alternativeString.Substring(sOpen + 1, sClosed - 1);
-                //
-                //                    while (notesString != "")
-                //                    {
-                //                        int mark = notesString.IndexOf("|");
-                //
-                //                        if (mark < 2 && mark != -1)
-                //                            _currentNote = notesString.Split(notesString[mark]).ToString();
-                //                        else
-                //                            _currentNote = notesString.Split(null).ToString();
-                //
-                //                        CheckFirstLast(alternativeString, sOpen, sClosed);
-                //
-                //                        int noteStrLength = _currentNote.Length;
-                //                        Delegate();
-                //                        notesString = notesString.Remove(0, noteStrLength);
-                //                    }
-                //                    alternativeString = alternativeString.Remove(sOpen, sClosed + 1);
-                //                }
-                _musicPartStr = _musicPartStr.Remove(_musicPartStr.IndexOf("\\alternative"), endIndex);
-                MusicPartWrapper alternative = new MusicPartWrapper(content, WrapperType.Alternative);
+                _musicPartStr = _musicPartStr.Remove(0, endIndex);
+                alternative._symbols = content;
                 _domain.AddLast(alternative);
             }
             return _domain;
-        }
-
-        private void CheckFirstLast(string alternativeString, int sOpen, int sClosed)
-        {
-            if (alternativeString.IndexOf(_currentNote) == sOpen + 1)
-                first = true;
-            else
-                first = false;
-
-            if (alternativeString.IndexOf(_currentNote) == sClosed - 1)
-                last = true;
-            else
-                last = false;
         }
     }
 }

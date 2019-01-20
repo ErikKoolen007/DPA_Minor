@@ -46,7 +46,7 @@ namespace DPA_Musicsheets.domain
             }
         }
 
-        public void WrapCurlyBraces(MusicPart part, bool open)
+        public MusicPart WrapCurlyBraces(MusicPart part, bool open)
         {
             if (part.GetType() == typeof(Rest))
             {
@@ -57,9 +57,10 @@ namespace DPA_Musicsheets.domain
                     r.letter = "{ " + r.letter;
                 else
                     r.duration = r.duration + " } ";
+                return r;
             }
 
-            if (part.GetType() == typeof(BaseNote))
+            if (part.GetType().BaseType == typeof(BaseNote))
             {
                 BaseNote n;
                 n = (BaseNote) part;
@@ -68,7 +69,10 @@ namespace DPA_Musicsheets.domain
                     n.letter = "{ " + n.letter;
                 else
                     n.duration = n.duration + " } ";
+                return n;
             }
+
+            return part;
         }
     }
 }

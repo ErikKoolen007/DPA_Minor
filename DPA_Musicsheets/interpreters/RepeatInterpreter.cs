@@ -37,7 +37,7 @@ namespace DPA_Musicsheets.interpreters
                 notesArr = notesString.Split(null);
                 foreach (var n in notesArr)
                 {
-                    if (n != "" && !n.Contains("repeat") && !n.Contains("volta") && n !="2")
+                    if (n != "" && !n.Contains("repeat") && !n.Contains("volta") && n !="2" && n != "{")
                     {
                         if (n == "|")
                         {
