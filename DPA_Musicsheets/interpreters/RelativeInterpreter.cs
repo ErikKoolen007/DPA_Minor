@@ -48,7 +48,7 @@ namespace DPA_Musicsheets.interpreters
                     notesArr = notesString.Split(null);
                     foreach (var n in notesArr)
                     {
-                        if (n != "")
+                        if (n != "" && n != "}")
                         {
                             if (n == "|")
                             {
@@ -62,6 +62,7 @@ namespace DPA_Musicsheets.interpreters
                                 catch (InvalidCastException ex)
                                 {
                                     Console.WriteLine(ex.StackTrace);
+                                    break;
                                 }
                             }
                             else
@@ -73,7 +74,6 @@ namespace DPA_Musicsheets.interpreters
                                 _domain.AddLast(p);
                             }
                         }
-
                     }
                 }
                 else
@@ -116,7 +116,9 @@ namespace DPA_Musicsheets.interpreters
             {
                 try
                 {   
-                    if (i != -1 && !copyStr.Substring(i, 12).Contains("\\") && !copyStr.Substring(i, 12).Contains("{"))
+                    if (i != -1 && !copyStr.Substring(i, 12).Contains("\\") && 
+                        !copyStr.Substring(i, 12).Contains("{") &&
+                        !copyStr.Substring(i, 12).Contains("repeat"))
                     {
                         interpreterOrder.Add(i+10, noteIntP);
                     }
