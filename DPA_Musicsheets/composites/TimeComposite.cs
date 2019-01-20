@@ -19,7 +19,7 @@ namespace DPA_Musicsheets.composites
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
             var times = time.ToString().Split('/');
-            symbols.Add(new TimeSignature(TimeSignatureType.Numbers, UInt32.Parse(times[0]), UInt32.Parse(times[1])));
+            symbols.Add(new TimeSignature(TimeSignatureType.Numbers, UInt32.Parse(times[0].Substring(times[0].Length-1)), UInt32.Parse(times[1])));
             visit(symbols);
             return symbols;
         }
