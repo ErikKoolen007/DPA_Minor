@@ -30,8 +30,9 @@ namespace DPA_Musicsheets.interpreters
         {
             if (_musicPartStr.Contains("\\repeat "))
             {
+                int startIndex = _musicPartStr.IndexOf("\\repeat");
                 int endIndex = _musicPartStr.IndexOf("}");
-                string notesString = _musicPartStr.Substring(0, endIndex); ;
+                string notesString = _musicPartStr.Substring(startIndex, endIndex - startIndex);
                 string[] notesArr;
                 
                 notesArr = notesString.Split(null);
@@ -61,7 +62,7 @@ namespace DPA_Musicsheets.interpreters
                         }
                     }
                 }
-                _musicPartStr = _musicPartStr.Remove(_musicPartStr.IndexOf("\\repeat"), endIndex);
+                _musicPartStr = _musicPartStr.Remove(_musicPartStr.IndexOf("\\repeat"), endIndex - startIndex);
                 MusicPartWrapper repeat = new MusicPartWrapper(content, WrapperType.Repeat);
                 _domain.AddLast(repeat);
             }

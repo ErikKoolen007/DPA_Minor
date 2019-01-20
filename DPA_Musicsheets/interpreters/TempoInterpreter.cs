@@ -26,18 +26,19 @@ namespace DPA_Musicsheets.interpreters
                 int index = _musicPartStr.IndexOf("\\tempo 4=");
                 string[] split = _musicPartStr.Split(null, 1);
                 split = split[0].Split("=".ToCharArray(), 2);
-                try
+                int bpm;
+                if (split[1].Length >= 3)
                 {
-                    //maybe " " a problem?
-                    int bpm = Int32.Parse(split[1]);
-                    Tempo tempo  = new Tempo(bpm);
-                    _musicPartStr = _musicPartStr.Remove(index, 12);
-                    _domain.AddLast(tempo);
+                    split = split[1].Split(null, 2);
+                    bpm = Int32.Parse(split[0]);
                 }
-                catch (InvalidCastException)
+                else
                 {
-                    Console.WriteLine("Could not parse bpm string to integers at TempoInterpreter");
+                    bpm = Int32.Parse(split[1]);
                 }
+                Tempo tempo  = new Tempo(bpm);
+                _musicPartStr = _musicPartStr.Remove(index, 12);
+                _domain.AddLast(tempo);
             }
             return Delegate();
         }

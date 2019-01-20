@@ -46,6 +46,7 @@ namespace DPA_Musicsheets.interpreters
                     int duration = Int32.Parse(_musicPartStr.Substring(index + 1));
                     _musicPartStr = _musicPartStr.Remove(index);
                     _r = new Rest(duration);
+                    return Delegate();
                 }
 
                 if (_musicPartStr.Contains("is"))
@@ -88,8 +89,11 @@ namespace DPA_Musicsheets.interpreters
                     foreach (char c in _musicPartStr)
                     {
                         index = _musicPartStr.IndexOf(".");
-                        _musicPartStr = _musicPartStr.Remove(index, 1);
-                        _note = new BaseNoteDot(_note);
+                        if (index != -1)
+                        {
+                            _musicPartStr = _musicPartStr.Remove(index, 1);
+                            _note = new BaseNoteDot(_note);
+                        }
                     }
                 }
                 //only letter and duration of the note are left

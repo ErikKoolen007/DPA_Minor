@@ -46,8 +46,9 @@ namespace DPA_Musicsheets.interpreters
             {
                 string notesString;
                 string[] notesArr;
+                int startIndex = _musicPartStr.IndexOf("\\alternative");
                 int endIndex = _musicPartStr.IndexOf("}  }");
-                notesString = _musicPartStr.Substring(_musicPartStr.IndexOf("\\alternative")+14, endIndex-12);
+                notesString = _musicPartStr.Substring(startIndex+14, endIndex-12 - startIndex);
 
                 notesArr = notesString.Split(null);
                 foreach (var n in notesArr)
@@ -86,7 +87,7 @@ namespace DPA_Musicsheets.interpreters
                 //append the } for the last element
                 content.Last.Value = alternative.WrapCurlyBraces(content.Last.Value, false);
 
-                _musicPartStr = _musicPartStr.Remove(0, endIndex);
+                _musicPartStr = _musicPartStr.Remove(startIndex, endIndex - startIndex);
                 alternative._symbols = content;
                 _domain.AddLast(alternative);
             }
