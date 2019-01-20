@@ -12,14 +12,24 @@ namespace DPA_Musicsheets.factories
     class LilyPondFactory : FileFactory
     {
         private string file_name;
+        private string changedText;
 
-        public LilyPondFactory(string file_name)
+        public LilyPondFactory(string file_name, string changedText = "")
         {
             this.file_name = file_name;
         }
         public override LinkedList<MusicPart> Load()
         {
-            string fileText =  OpenFile();
+            string fileText;
+            if (changedText == "")
+            {
+                fileText = OpenFile();
+            }
+            else
+            {
+                fileText = changedText;
+            }
+             
             fileText = fileText.Replace("\r\n", "");
 
             RelativeInterpreter interpreter = new RelativeInterpreter(fileText, new LinkedList<MusicPart>());

@@ -55,20 +55,33 @@ namespace DPA_Musicsheets.factories
         {
             List<MusicalSymbol> symbols = new List<MusicalSymbol>();
 
-            PSAMControlLibrary.Clef currentClef = null;
-            int previousOctave = 4;
-            char previousNote = 'c';
-            bool inRepeat = false;
-            bool inAlternative = false;
-            int alternativeRepeatNumber = 0;
-
-            MusicPart currentToken = _tokens.First();
-            while (currentToken != null)
+            try
             {
-                switch (currentToken.TokenKind)
-                {
-                    case LilypondTokenKind.Unknown:
-                        break;
+                MusicPartWrapper relative = (MusicPartWrapper) _tokens.First();
+                AbstractComposite composite = new RelativeComposite(relative);
+                symbols = composite.visit(new List<MusicalSymbol>());
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return symbols;
+//
+//            PSAMControlLibrary.Clef currentClef = null;
+//            int previousOctave = 4;
+//            char previousNote = 'c';
+//            bool inRepeat = false;
+//            bool inAlternative = false;
+//            int alternativeRepeatNumber = 0;
+//
+//            MusicPart currentToken = _tokens.First();
+//            while (currentToken != null)
+//            {
+//                switch (currentToken.TokenKind)
+//                {
+//                    case LilypondTokenKind.Unknown:
+//                        break;
 //                    case LilypondTokenKind.Repeat:
 //                        inRepeat = true;
 //                        symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward });
@@ -96,59 +109,59 @@ namespace DPA_Musicsheets.factories
 //                            alternativeRepeatNumber++;
 //                            symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
 //                        }
-                        //break;
-                    
+//                        break;
+//                    
 //                    case LilypondTokenKind.Alternative:
 //                        inAlternative = true;
 //                        inRepeat = false;
 //                        currentToken = currentToken.NextToken; // Skip the first bracket open.
 //                        break;
-                    case LilypondTokenKind.Note:
-                        NoteTieType tie = NoteTieType.None;
-                        if (currentToken.Value.StartsWith("~"))
-                        {
-                            tie = NoteTieType.Stop;
-                            var lastNote = symbols.Last(s => s is Note) as Note;
-                            if (lastNote != null) lastNote.TieType = NoteTieType.Start;
-                            currentToken.Value = currentToken.Value.Substring(1);
-                        }
-                        // Length
-                        int noteLength = Int32.Parse(Regex.Match(currentToken.Value, @"\d+").Value);
-                        // Crosses and Moles
-                        int alter = 0;
-                        alter += Regex.Matches(currentToken.Value, "is").Count;
-                        alter -= Regex.Matches(currentToken.Value, "es|as").Count;
-                        // Octaves
-                        int distanceWithPreviousNote = _notesorder.IndexOf(currentToken.Value[0]) - _notesorder.IndexOf(previousNote);
-                        if (distanceWithPreviousNote > 3) // Shorter path possible the other way around
-                        {
-                            distanceWithPreviousNote -= 7; // The number of notes in an octave
-                        }
-                        else if (distanceWithPreviousNote < -3)
-                        {
-                            distanceWithPreviousNote += 7; // The number of notes in an octave
-                        }
-
-                        if (distanceWithPreviousNote + _notesorder.IndexOf(previousNote) >= 7)
-                        {
-                            previousOctave++;
-                        }
-                        else if (distanceWithPreviousNote + _notesorder.IndexOf(previousNote) < 0)
-                        {
-                            previousOctave--;
-                        }
-
-                        // Force up or down.
-                        previousOctave += currentToken.Value.Count(c => c == '\'');
-                        previousOctave -= currentToken.Value.Count(c => c == ',');
-
-                        previousNote = currentToken.Value[0];
-
-                        var note = new Note(currentToken.Value[0].ToString().ToUpper(), alter, previousOctave, (MusicalSymbolDuration)noteLength, NoteStemDirection.Up, tie, new List<NoteBeamType>() { NoteBeamType.Single });
-                        note.NumberOfDots += currentToken.Value.Count(c => c.Equals('.'));
-
-                        symbols.Add(note);
-                        break;
+//                    case LilypondTokenKind.Note:
+//                        NoteTieType tie = NoteTieType.None;
+//                        if (currentToken.Value.StartsWith("~"))
+//                        {
+//                            tie = NoteTieType.Stop;
+//                            var lastNote = symbols.Last(s => s is Note) as Note;
+//                            if (lastNote != null) lastNote.TieType = NoteTieType.Start;
+//                            currentToken.Value = currentToken.Value.Substring(1);
+//                        }
+//                        // Length
+//                        int noteLength = Int32.Parse(Regex.Match(currentToken.Value, @"\d+").Value);
+//                        // Crosses and Moles
+//                        int alter = 0;
+//                        alter += Regex.Matches(currentToken.Value, "is").Count;
+//                        alter -= Regex.Matches(currentToken.Value, "es|as").Count;
+//                        // Octaves
+//                        int distanceWithPreviousNote = _notesorder.IndexOf(currentToken.Value[0]) - _notesorder.IndexOf(previousNote);
+//                        if (distanceWithPreviousNote > 3) // Shorter path possible the other way around
+//                        {
+//                            distanceWithPreviousNote -= 7; // The number of notes in an octave
+//                        }
+//                        else if (distanceWithPreviousNote < -3)
+//                        {
+//                            distanceWithPreviousNote += 7; // The number of notes in an octave
+//                        }
+//
+//                        if (distanceWithPreviousNote + _notesorder.IndexOf(previousNote) >= 7)
+//                        {
+//                            previousOctave++;
+//                        }
+//                        else if (distanceWithPreviousNote + _notesorder.IndexOf(previousNote) < 0)
+//                        {
+//                            previousOctave--;
+//                        }
+//
+//                        // Force up or down.
+//                        previousOctave += currentToken.Value.Count(c => c == '\'');
+//                        previousOctave -= currentToken.Value.Count(c => c == ',');
+//
+//                        previousNote = currentToken.Value[0];
+//
+//                        var note = new Note(currentToken.Value[0].ToString().ToUpper(), alter, previousOctave, (MusicalSymbolDuration)noteLength, NoteStemDirection.Up, tie, new List<NoteBeamType>() { NoteBeamType.Single });
+//                        note.NumberOfDots += currentToken.Value.Count(c => c.Equals('.'));
+//
+//                        symbols.Add(note);
+//                        break;
 //                    case LilypondTokenKind.Rest:
 //                        var restLength = Int32.Parse(currentToken.Value[1].ToString());
 //                        symbols.Add(new Rest((MusicalSymbolDuration)restLength));
@@ -156,16 +169,15 @@ namespace DPA_Musicsheets.factories
 //                    case LilypondTokenKind.Bar:
 //                        symbols.Add(new Barline() { AlternateRepeatGroup = alternativeRepeatNumber });
 //                        break;
-                    default:
-                        break;
-                }
-                _tokens.RemoveFirst();
-                currentToken = _tokens.First.Value;
-            }
+//                    default:
+//                        break;
+//                }
+//                _tokens.RemoveFirst();
+//                currentToken = _tokens.First.Value;
+//            }
 
-            return symbols;
         }
-        private Sequence GetSequenceFromWPFStaffs()
+        public Sequence GetSequenceFromWPFStaffs()
         {
             
             int absoluteTicks = 0;

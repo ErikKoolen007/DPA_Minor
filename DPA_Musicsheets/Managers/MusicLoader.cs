@@ -4,6 +4,7 @@ using DPA_Musicsheets.ViewModels;
 using PSAMControlLibrary;
 using Sanford.Multimedia.Midi;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,7 +24,7 @@ namespace DPA_Musicsheets.Managers
     public class MusicLoader
     {
         #region Properties
-        public string LilypondText { get; set; }
+        public string DomainText { get; set; }
         
 
         public Sequence MidiSequence { get; set; }
@@ -38,9 +39,10 @@ namespace DPA_Musicsheets.Managers
         public MidiPlayerViewModel MidiPlayerViewModel { get; set; }
         public StaffsViewModel StaffsViewModel { get; set; }
 
+        public FileFactory factory { get; set; }
+
         public void OpenFile(string fileName)
         {
-            FileFactory factory = null;
             LinkedList<MusicPart> domain;
             //just moved
             if (Path.GetExtension(fileName).EndsWith(".mid"))
@@ -57,7 +59,7 @@ namespace DPA_Musicsheets.Managers
                 foreach (var e in domain)
                 {
                     sb.Append(e);
-                    LilypondText = sb.ToString();
+                    DomainText = sb.ToString();
                 }
             }
             else if (Path.GetExtension(fileName).EndsWith(".ly"))
@@ -69,19 +71,23 @@ namespace DPA_Musicsheets.Managers
                 {
                     sb.Append(e.ToString());
                 }
-                LilypondText= sb.ToString();
+                DomainText= sb.ToString();
             }
             else
             {
                 throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
             }
-            this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
-            LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
+            this.LilypondViewModel.LilypondTextLoaded(this.DomainText);
+
+            factory = new WPFFactory(domain, StaffsViewModel, MidiPlayerViewModel);
+            factory.Load();
+
+            //LoadLilypondIntoWpfStaffsAndMidi(DomainText);
         }
 
 //        public void LoadLilypondIntoWpfStaffsAndMidi(string content)
 //        {
-//            LilypondText = content;
+//            DomainText = content;
 //            content = content.Trim().ToLower().Replace("\r\n", " ").Replace("\n", " ").Replace("  ", " ");
 //            LinkedList<LilypondToken> tokens = GetTokensFromLilypond(content);
 //            WPFStaffs.Clear();
@@ -382,9 +388,12 @@ namespace DPA_Musicsheets.Managers
         #region Saving to files
         internal void SaveToMidi(string fileName)
         {
-            Sequence sequence = GetSequenceFromWPFStaffs();
-
-            sequence.Save(fileName);
+            if(factory.GetType() == typeof(WPFFactory))
+            {
+                WPFFactory f = (WPFFactory) factory;
+                Sequence sequence = f.GetSequenceFromWPFStaffs();
+                sequence.Save(fileName);
+            }
         }
         
 //        private Sequence GetSequenceFromWPFStaffs()
@@ -486,7 +495,7 @@ namespace DPA_Musicsheets.Managers
         {
             using (StreamWriter outputFile = new StreamWriter(fileName))
             {
-                outputFile.Write(LilypondText);
+                outputFile.Write(DomainText);
                 outputFile.Close();
             }
         }

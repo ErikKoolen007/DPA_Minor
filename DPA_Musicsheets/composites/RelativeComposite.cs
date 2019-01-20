@@ -14,11 +14,9 @@ namespace DPA_Musicsheets
     class RelativeComposite : AbstractComposite
     {
         private MusicPartWrapper _relative;
-        private int _alternativeRepeatNumber;
-        public RelativeComposite(MusicPartWrapper relative, ref int alternativeRepeatNumber)
+        public RelativeComposite(MusicPartWrapper relative)
         {
             _relative = relative;
-            _alternativeRepeatNumber = alternativeRepeatNumber;
         }
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
@@ -29,6 +27,10 @@ namespace DPA_Musicsheets
 
         public void next(List<MusicalSymbol> symbols)
         {
+            int previousOctave = 4;
+            char previousNote = 'c';
+            int alternativeRepeatNumber = 0;
+
             foreach (var part in _relative._symbols)
             {
                 if (part.GetType() == typeof(Clef))
@@ -50,11 +52,11 @@ namespace DPA_Musicsheets
                 {
                     BaseNote note = (BaseNote) part;
                     BaseNoteComposite noteComposite = new BaseNoteComposite(note);
-                    symbols = noteComposite.visit(symbols);
+                    symbols = noteComposite.visit(symbols, ref previousOctave, ref alternativeRepeatNumber, ref previousNote);
                 } else if (part.GetType() == typeof(Rest))
                 {
                     Rest rest = (Rest) part;
-                    RestComposite restComposite = new RestComposite(rest, ref _alternativeRepeatNumber);
+                    RestComposite restComposite = new RestComposite(rest, ref alternativeRepeatNumber);
                     symbols = restComposite.visit(symbols);
                 } else if (part.GetType() == typeof(MusicPartWrapper))
                 {

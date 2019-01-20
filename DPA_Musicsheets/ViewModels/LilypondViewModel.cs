@@ -3,11 +3,14 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DPA_Musicsheets.domain;
+using DPA_Musicsheets.factories;
 using DPA_Musicsheets.Memento;
 
 namespace DPA_Musicsheets.ViewModels
@@ -81,7 +84,12 @@ namespace DPA_Musicsheets.ViewModels
                             _careTaker.Save(new EditorMemento(LilypondText));
                         _textChangedByMemento = false;
 
-                        _musicLoader.LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
+                        FileFactory factory = new LilyPondFactory("", LilypondText);
+                        LinkedList<MusicPart> domain =  factory.Load();
+                        
+                        factory = new WPFFactory(domain, _musicLoader.StaffsViewModel, _musicLoader.MidiPlayerViewModel);
+                        factory.Load();
+                        //_musicLoader.LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
                         _mainViewModel.CurrentState = "";
                     }
                 }, TaskScheduler.FromCurrentSynchronizationContext()); // Request from main thread.
