@@ -77,6 +77,7 @@ namespace DPA_Musicsheets.Managers
             LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
+        //Load WPF based on result string domain
         public void LoadLilypondIntoWpfStaffsAndMidi(string content)
         {
             LilypondText = content;
@@ -85,113 +86,13 @@ namespace DPA_Musicsheets.Managers
             WPFStaffs.Clear();
 
             WPFStaffs.AddRange(GetStaffsFromTokens(tokens));
-            this.StaffsViewModel.SetStaffs(this.WPFStaffs);
+            StaffsViewModel.SetStaffs(WPFStaffs);
 
             MidiSequence = GetSequenceFromWPFStaffs();
             MidiPlayerViewModel.MidiSequence = MidiSequence;
         }
 
         #region Midi loading (loads midi to lilypond)
-
-        public string LoadMidiIntoLilypond(Sequence sequence)
-        {
-            StringBuilder lilypondContent = new StringBuilder();
-            lilypondContent.AppendLine("\\relative c' {");
-            lilypondContent.AppendLine("\\clef treble");
-
-            int division = sequence.Division;
-            int previousMidiKey = 60; // Central C;
-            int previousNoteAbsoluteTicks = 0;
-            double percentageOfBarReached = 0;
-            bool startedNoteIsClosed = true;
-
-            for (int i = 0; i < sequence.Count(); i++)
-            {
-                Track track = sequence[i];
-
-                foreach (var midiEvent in track.Iterator())
-                {
-                    IMidiMessage midiMessage = midiEvent.MidiMessage;
-                    switch (midiMessage.MessageType)
-                    {
-                        case MessageType.Meta:
-                            var metaMessage = midiMessage as MetaMessage;
-                            switch (metaMessage.MetaType)
-                            {
-                                case MetaType.TimeSignature:
-                                    byte[] timeSignatureBytes = metaMessage.GetBytes();
-                                    _beatNote = timeSignatureBytes[0];
-                                    _beatsPerBar = (int)(1 / Math.Pow(timeSignatureBytes[1], -2));
-                                    lilypondContent.AppendLine($"\\time {_beatNote}/{_beatsPerBar}");
-                                    break;
-                                case MetaType.Tempo:
-                                    byte[] tempoBytes = metaMessage.GetBytes();
-                                    int tempo = (tempoBytes[0] & 0xff) << 16 | (tempoBytes[1] & 0xff) << 8 | (tempoBytes[2] & 0xff);
-                                    _bpm = 60000000 / tempo;
-                                    lilypondContent.AppendLine($"\\tempo 4={_bpm}");
-                                    break;
-                                //Wordt het onderstaande überhaupt ergens voor gebruikt?
-                                case MetaType.EndOfTrack:
-                                    if (previousNoteAbsoluteTicks > 0)
-                                    {
-                                        // Finish the last notelength.
-                                        double percentageOfBar;
-                                        lilypondContent.Append(MidiToLilyHelper.GetLilypondNoteLength(previousNoteAbsoluteTicks, midiEvent.AbsoluteTicks, division, _beatNote, _beatsPerBar, out percentageOfBar));
-                                        lilypondContent.Append(" ");
-
-                                        percentageOfBarReached += percentageOfBar;
-                                        if (percentageOfBarReached >= 1)
-                                        {
-                                            lilypondContent.AppendLine("|");
-                                            percentageOfBar = percentageOfBar - 1;
-                                        }
-                                    }
-                                    break;
-                                default: break;
-                            }
-                            break;
-                        case MessageType.Channel:
-                            var channelMessage = midiEvent.MidiMessage as ChannelMessage;
-                            if (channelMessage.Command == ChannelCommand.NoteOn)
-                            {
-                                if(channelMessage.Data2 > 0) // Data2 = loudness
-                                {
-                                    // Append the new baseNote.
-                                    lilypondContent.Append(MidiToLilyHelper.GetLilyNoteName(previousMidiKey, channelMessage.Data1));
-                                    
-                                    previousMidiKey = channelMessage.Data1;
-                                    startedNoteIsClosed = false;
-                                }
-                                else if (!startedNoteIsClosed)
-                                {
-                                    // Finish the previous baseNote with the length.
-                                    double percentageOfBar;
-                                    lilypondContent.Append(MidiToLilyHelper.GetLilypondNoteLength(previousNoteAbsoluteTicks, midiEvent.AbsoluteTicks, division, _beatNote, _beatsPerBar, out percentageOfBar));
-                                    previousNoteAbsoluteTicks = midiEvent.AbsoluteTicks;
-                                    lilypondContent.Append(" ");
-
-                                    percentageOfBarReached += percentageOfBar;
-                                    if (percentageOfBarReached >= 1)
-                                    {
-                                        lilypondContent.AppendLine("|");
-                                        percentageOfBarReached -= 1;
-                                    }
-                                    startedNoteIsClosed = true;
-                                }
-                                else
-                                {
-                                    lilypondContent.Append("r");
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-
-            lilypondContent.Append("}");
-
-            return lilypondContent.ToString();
-        }
 
         #endregion Midiloading (loads midi to lilypond)
 
@@ -210,10 +111,6 @@ namespace DPA_Musicsheets.Managers
             LilypondToken currentToken = tokens.First();
             while (currentToken != null)
             {
-                // TODO: There are a lot of switches based on LilypondTokenKind, can't those be eliminated en delegated?
-                // HINT: Command, Decorator, Factory etc.
-
-                // TODO: Repeats are somewhat weirdly done. Can we replace this with the COMPOSITE pattern?
                 switch (currentToken.TokenKind)
                 {
                     case LilypondTokenKind.Unknown:
@@ -252,8 +149,6 @@ namespace DPA_Musicsheets.Managers
                         currentToken = currentToken.NextToken; // Skip the first bracket open.
                         break;
                     case LilypondTokenKind.Note:
-                        // Tied
-                        // TODO: A tie, like a dot and cross or mole are decorations on notes. Is the DECORATOR pattern of use here?
                         NoteTieType tie = NoteTieType.None;
                         if (currentToken.Value.StartsWith("~"))
                         {
@@ -312,6 +207,8 @@ namespace DPA_Musicsheets.Managers
                             currentClef = new Clef(ClefType.GClef, 2);
                         else if (currentToken.Value == "bass")
                             currentClef = new Clef(ClefType.FClef, 4);
+                        else if (currentToken.Value == "soprano")
+                            currentClef = new Clef(ClefType.CClef, 3);
                         else
                             throw new NotSupportedException($"Clef {currentToken.Value} is not supported.");
 
