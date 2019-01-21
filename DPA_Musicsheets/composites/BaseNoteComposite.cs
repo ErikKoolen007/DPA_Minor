@@ -25,6 +25,7 @@ namespace DPA_Musicsheets.composites
             string letter = this.note.letter;
             string duration = this.note.duration;
             int dotsCount = 0;
+            int apostropheCount = 0;
             int index;
             int alter = 0;
 
@@ -70,6 +71,12 @@ namespace DPA_Musicsheets.composites
                     dotsCount++;
                     index = duration.IndexOf(".");
                 }
+            }
+
+            if (this.note.duration.Contains("\r\n"))
+            {
+                index = duration.IndexOf("\r\n");
+                duration = duration.Remove(index);
             }
 
             if (this.note.letter.Contains("~"))
@@ -132,8 +139,13 @@ namespace DPA_Musicsheets.composites
             if (this.note.letter.Contains("'"))
             {
                 index = letter.IndexOf("'");
-                letter = letter.Remove(index, 1);
-                previousOctave++;
+                while (index != -1)
+                {
+                    letter = letter.Remove(index, 1);
+                    apostropheCount++;
+                    index = letter.IndexOf("'");
+                    previousOctave++;
+                }
             }
 
             previousNote = note.letter[0];
