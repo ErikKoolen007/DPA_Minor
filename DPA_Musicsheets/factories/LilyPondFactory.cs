@@ -25,14 +25,14 @@ namespace DPA_Musicsheets.factories
             if (changedText == "")
             {
                 fileText = OpenFile();
+                fileText = fileText.Replace("\r\n", "");
             }
             else
             {
                 fileText = changedText;
+                fileText = fileText.Replace("\r\n", "");
             }
              
-            fileText = fileText.Replace("\r\n", "");
-
             RelativeInterpreter interpreter = new RelativeInterpreter(fileText, new LinkedList<MusicPart>());
             content = interpreter.Interpret();
 

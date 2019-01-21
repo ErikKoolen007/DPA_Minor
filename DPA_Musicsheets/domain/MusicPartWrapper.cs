@@ -38,11 +38,11 @@ namespace DPA_Musicsheets.domain
             switch (_type)
             {
                 case WrapperType.Alternative:
-                    return "\\alternative { \n" + listContent.ToString() + "\n }";
+                    return "\\alternative { \r\n" + listContent.ToString() + "\r\n}";
                 case WrapperType.Repeat:
-                    return "\\repeat volta 2 { \n" + listContent.ToString() + "\n }";
+                    return "\\repeat volta 2 { \r\n" + listContent.ToString() + "\r\n }";
                 default:
-                    return "\\relative c' { \n" + listContent.ToString() + "\n | }";
+                    return "\\relative c' { \r\n" + listContent.ToString() + "\r\n | }";
             }
         }
 

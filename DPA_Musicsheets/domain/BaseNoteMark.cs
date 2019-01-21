@@ -15,7 +15,7 @@ namespace DPA_Musicsheets.domain
 
         public sealed override void Decorate()
         {
-            duration = duration + " | \n";
+            duration = duration + " | \r\n";
         }
     }
 }

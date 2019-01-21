@@ -108,6 +108,7 @@ namespace DPA_Musicsheets.interpreters
         private void fillHashSet()
         {
             string copyStr = _musicPartStr;
+            string copyNoteStr = copyStr;
 
             int index = 0;
             int i = copyStr.IndexOf("\\relative");
@@ -116,20 +117,21 @@ namespace DPA_Musicsheets.interpreters
             {
                 try
                 {   
-                    if (i != -1 && !copyStr.Substring(i, 12).Contains("\\") && 
-                        !copyStr.Substring(i, 12).Contains("{") &&
-                        !copyStr.Substring(i, 12).Contains("repeat"))
+                    if (i != -1 && !copyNoteStr.Substring(i, 12).Contains("\\") && 
+                        !copyNoteStr.Substring(i, 12).Contains("{") &&
+                        !copyNoteStr.Substring(i, 12).Contains("repeat") &&
+                        !copyNoteStr.Substring(i, 12).Contains("clef"))
                     {
                         interpreterOrder.Add(i+10, noteIntP);
                     }
-                    else if (!copyStr.Contains("\\") && !copyStr.Contains("{") && copyStr != "")
+                    else if (!copyNoteStr.Contains("\\") && !copyNoteStr.Contains("{") && copyNoteStr != "")
                     {
                         interpreterOrder.Add(i+10, noteIntP);
                     }
-                    i = copyStr.IndexOf("\\");
-                    copyStr = copyStr.Remove(i, 1);
+                    i = copyNoteStr.IndexOf("\\");
+                    copyNoteStr = copyNoteStr.Remove(i, 1);
 
-                    if (copyStr == "" || i + 10 > copyStr.Length)
+                    if (copyNoteStr == "" || i + 10 > copyNoteStr.Length)
                     {
                         index = -1;
                     }

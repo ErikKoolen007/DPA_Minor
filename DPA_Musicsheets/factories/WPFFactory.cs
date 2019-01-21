@@ -36,6 +36,7 @@ namespace DPA_Musicsheets.factories
         {
             _tokens = tokens;
             _staffsViewModel = staffsViewModel;
+            _midiViewModel = midiViewModel;
         }
         public override LinkedList<MusicPart> Load()
         {
