@@ -101,17 +101,10 @@ namespace DPA_Musicsheets.factories
                     note = TranslateMidiName(msg.Data1, note, _previousMidiKey);
 
                     _previousMidiKey = msg.Data1;
-                    _startedNoteIsClosed = false;
-                }
 
-                else if (!_startedNoteIsClosed)
-                {
                     // Finish the previous baseNote with the length.               
                     note.duration = "" + TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
                     _previousNoteAbsoluteTicks = e.AbsoluteTicks;
-                    
-                    //BaseNoteSpace noteSpace = new BaseNoteSpace(note);
-                    //note = noteSpace;
 
                     _percentageOfBarReached += _percentageOfBar;
                     if (_percentageOfBarReached >= 1)
@@ -121,16 +114,20 @@ namespace DPA_Musicsheets.factories
 
                         _percentageOfBarReached -= 1;
                     }
-                    _startedNoteIsClosed = true;
+                    return note;
                 }
                 else
                 {
-                    int restDuration = TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
-                    Rest r = new Rest(restDuration);
-                    return r;
+                    int restDuration = TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note)/8;
+                    if (restDuration > 1)
+                    {
+                        Rest r = new Rest(restDuration);
+                        return r;
+                    }
                 }
             }
-            return note;
+
+            return null;
         }
 
         private MusicPart LoadMetaMsg(MetaMessage msg)
