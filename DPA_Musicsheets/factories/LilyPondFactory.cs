@@ -17,6 +17,7 @@ namespace DPA_Musicsheets.factories
         public LilyPondFactory(string file_name, string changedText = "")
         {
             this.file_name = file_name;
+            this.changedText = changedText;
         }
         public override LinkedList<MusicPart> Load()
         {

@@ -16,7 +16,7 @@ namespace DPA_Musicsheets.domain
         //check this
         public sealed override void Decorate()
         {
-            letter = "'" + letter;
+            letter = letter + "'";
         } 
     }
 }

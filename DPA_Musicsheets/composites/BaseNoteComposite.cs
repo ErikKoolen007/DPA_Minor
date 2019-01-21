@@ -45,8 +45,8 @@ namespace DPA_Musicsheets.composites
             {
                 SectionStartComposite sectionStart = new SectionStartComposite(this.note, ref alternativeRepeatNumber);
 
-                index = duration.IndexOf("{");
-                duration = duration.Remove(index, 1);
+                index = letter.IndexOf("{");
+                letter = letter.Remove(index, 1);
 
                 symbols = sectionStart.visit(symbols);
             }
@@ -68,6 +68,7 @@ namespace DPA_Musicsheets.composites
                 {
                     duration = duration.Remove(index, 1);
                     dotsCount++;
+                    index = duration.IndexOf(".");
                 }
             }
 
