@@ -123,6 +123,7 @@ namespace DPA_Musicsheets.interpreters
                         !copyNoteStr.Substring(i, 12).Contains("clef"))
                     {
                         interpreterOrder.Add(i+10, noteIntP);
+
                     }
                     else if (!copyNoteStr.Contains("\\") && !copyNoteStr.Contains("{") && copyNoteStr != "")
                     {

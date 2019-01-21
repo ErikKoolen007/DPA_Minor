@@ -29,6 +29,7 @@ namespace DPA_Musicsheets.interpreters
             else
             {
                 tmpQueue.AddLast(_r);
+                _r = null;
             }
             
             return tmpQueue;
