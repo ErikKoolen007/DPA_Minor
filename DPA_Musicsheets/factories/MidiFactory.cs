@@ -274,7 +274,7 @@ namespace DPA_Musicsheets.factories
             if (deltaTicks <= 0)
             {
                 _percentageOfBar = 0;
-                return 0;
+                return 4;
             }
 
             double percentageOfBeatNote = deltaTicks / division;
