@@ -98,43 +98,39 @@ namespace DPA_Musicsheets.factories
             {
                 if (msg.Data2 > 0) // Data2 = loudness
                 {
-                    // Append the new baseNote.
-                    //note.letter = MidiToLilyHelper.GetLilyNoteName(_previousMidiKey, msg.Data1);
                     note = TranslateMidiName(msg.Data1, note, _previousMidiKey);
 
                     _previousMidiKey = msg.Data1;
                     _startedNoteIsClosed = false;
                 }
 
-                if (!_startedNoteIsClosed)
+                else if (!_startedNoteIsClosed)
                 {
-                    // Finish the previous baseNote with the length.
-                    
-                   // note.duration = MidiToLilyHelper.GetLilypondNoteLength(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, _beatNote, _beatsPerBar, file_namepercentageOfBar);
+                    // Finish the previous baseNote with the length.               
                     note.duration = "" + TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
                     _previousNoteAbsoluteTicks = e.AbsoluteTicks;
                     
-                    BaseNoteSpace noteSpace = new BaseNoteSpace(note);
-                    note = noteSpace;
-                   // lilypondContent.Append(" ");
+                    //BaseNoteSpace noteSpace = new BaseNoteSpace(note);
+                    //note = noteSpace;
 
                     _percentageOfBarReached += _percentageOfBar;
                     if (_percentageOfBarReached >= 1)
                     {
                         BaseNoteMark noteMark = new BaseNoteMark(note);
                         note = noteMark;
-                        //lilypondContent.AppendLine("|");
+
                         _percentageOfBarReached -= 1;
                     }
                     _startedNoteIsClosed = true;
-                    return note;
                 }
-
-                int restDuration = TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
-                Rest r = new Rest(restDuration);
-                return r;
+                else
+                {
+                    int restDuration = TranslateMidiDuration(_previousNoteAbsoluteTicks, e.AbsoluteTicks, division, note);
+                    Rest r = new Rest(restDuration);
+                    return r;
+                }
             }
-            return null;
+            return note;
         }
 
         private MusicPart LoadMetaMsg(MetaMessage msg)
