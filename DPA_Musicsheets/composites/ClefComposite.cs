@@ -28,14 +28,13 @@ namespace DPA_Musicsheets.composites
             else
                 throw new NotSupportedException($"Clef is not supported.");
             symbols.Add(currentClef);
-            next(symbols);
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             //tree doesn't go any deeper
-            return;
+            return symbols;
         }
     }
 }

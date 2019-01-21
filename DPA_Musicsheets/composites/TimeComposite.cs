@@ -20,14 +20,13 @@ namespace DPA_Musicsheets.composites
         {
             var times = time.ToString().Split('/');
             symbols.Add(new TimeSignature(TimeSignatureType.Numbers, UInt32.Parse(times[0].Substring(times[0].Length-1)), UInt32.Parse(times[1])));
-            visit(symbols);
-            return symbols;
+            return visit(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             //tree doesn't go any deeper
-            return;
+            return symbols;
         }
     }
 }

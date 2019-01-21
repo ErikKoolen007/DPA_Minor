@@ -38,14 +38,13 @@ namespace DPA_Musicsheets.composites
                 symbols.Add(new Barline() { RepeatSign = RepeatSignType.Forward, AlternateRepeatGroup = _alterNativeRepeatNumber });
             }
 
-            visit(symbols);
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             //not possible to go any deeper
-            return;
+            return symbols;
         }
     }
 }

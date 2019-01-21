@@ -216,6 +216,13 @@ namespace DPA_Musicsheets.factories
                 note = crossNote;
             }
 
+            if (KeyNumber == 6 && prevMidiKeyNumber > 6)
+            {
+                note.letter = "f";
+                moleNote = new BaseNoteMole(note);
+                note = moleNote;
+            }
+
             if (KeyNumber == 7)
             {
                 note.letter = "g";

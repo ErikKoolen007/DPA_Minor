@@ -19,13 +19,13 @@ namespace DPA_Musicsheets.composites
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
             symbols.Add(new Barline() { AlternateRepeatGroup = _alternativeRepeatNumber });
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             //not possible to go any deeper
-            return;
+            return symbols;
         }
     }
 }

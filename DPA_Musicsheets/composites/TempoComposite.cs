@@ -19,13 +19,13 @@ namespace DPA_Musicsheets.composites
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
             //not supported - as it already was
-            next(symbols);
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             //tree doesn't go any deeper
+            return symbols;
         }
     }
 }

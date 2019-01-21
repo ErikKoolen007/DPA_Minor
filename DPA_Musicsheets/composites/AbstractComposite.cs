@@ -10,6 +10,6 @@ namespace DPA_Musicsheets
     interface AbstractComposite
     {
         List<MusicalSymbol> visit(List<MusicalSymbol> symbols);
-        void next(List<MusicalSymbol> symbols);
+        List<MusicalSymbol> next(List<MusicalSymbol> symbols);
     }
 }

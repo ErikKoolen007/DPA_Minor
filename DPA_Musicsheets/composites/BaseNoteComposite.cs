@@ -137,12 +137,12 @@ namespace DPA_Musicsheets.composites
 
             previousNote = note.letter[0];
             int dur = Int32.Parse(duration);
-            var psamNote = new Note(letter.ToUpper(), alter, previousOctave, (MusicalSymbolDuration)Int32.Parse(duration), NoteStemDirection.Up, tie, new List<NoteBeamType>() { NoteBeamType.Single });
+            var psamNote = new Note(letter.ToUpper(), alter, previousOctave, (MusicalSymbolDuration)dur, NoteStemDirection.Up, tie, new List<NoteBeamType>() { NoteBeamType.Single });
             psamNote.NumberOfDots += dotsCount;
 
             symbols.Add(psamNote);
 
-            return symbols;
+            return next(symbols);
         }
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
@@ -150,9 +150,9 @@ namespace DPA_Musicsheets.composites
             throw new NotImplementedException();
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
-            //structure does not go any deeper
+            return symbols;
         }
 
         private static char isValid(String str)
@@ -162,7 +162,6 @@ namespace DPA_Musicsheets.composites
                 if (char.IsLetter(c))
                     return c;
             }
-
             return '?';
         }
     }

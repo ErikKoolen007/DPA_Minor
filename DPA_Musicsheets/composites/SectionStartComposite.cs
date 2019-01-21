@@ -25,12 +25,12 @@ namespace DPA_Musicsheets.composites
                 symbols.Add(new Barline() { AlternateRepeatGroup = _alternativeRepeatNumber });
             }
 
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
-            //not posible to go any deeper
+            return symbols;
         }
     }
 }

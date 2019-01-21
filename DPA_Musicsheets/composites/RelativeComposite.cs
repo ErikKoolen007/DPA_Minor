@@ -14,24 +14,25 @@ namespace DPA_Musicsheets
     class RelativeComposite : AbstractComposite
     {
         private MusicPartWrapper _relative;
-        public RelativeComposite(MusicPartWrapper relative)
+        private LinkedList<MusicPart> _parts;
+        public RelativeComposite(MusicPartWrapper relative, LinkedList<MusicPart> parts)
         {
             _relative = relative;
+            _parts = parts;
         }
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
-            next(symbols);
-            return symbols;
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             int previousOctave = 4;
             char previousNote = 'c';
             int alternativeRepeatNumber = 0;
 
-            foreach (var part in _relative._symbols)
+            foreach (var part in _parts)
             {
                 if (part.GetType() == typeof(Clef))
                 {
@@ -62,9 +63,10 @@ namespace DPA_Musicsheets
                 {
                     MusicPartWrapper wrapper = (MusicPartWrapper) part;
                     WrapperComposite wrapperComposite = new WrapperComposite(wrapper);
-                    symbols = wrapperComposite.visit(symbols);
+                    symbols = wrapperComposite.visit(symbols, ref previousOctave, ref alternativeRepeatNumber, ref previousNote);
                 }
             }
+            return symbols;
         }
     }
 }

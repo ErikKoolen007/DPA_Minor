@@ -23,20 +23,20 @@ namespace DPA_Musicsheets.composites
         {
             string dur = rest.duration;
             int duration;
-            if (dur.Contains("}") || dur.Contains("|"))
+            foreach (var c in dur)
             {
-                duration = Int32.Parse(rest.duration.Remove(rest.duration.Length - 1));
+                if (char.IsDigit(c))
+                {
+                    duration = Int32.Parse(dur);
+                    symbols.Add(new PSAMControlLibrary.Rest((MusicalSymbolDuration)duration));
+                    break;
+                }
             }
-            else
-            {
-                duration = Int32.Parse(rest.duration.Remove(rest.duration.Length));
-            }
-            symbols.Add(new PSAMControlLibrary.Rest((MusicalSymbolDuration)duration));
-            next(symbols);
-            return symbols;
+            
+            return next(symbols);
         }
 
-        public void next(List<MusicalSymbol> symbols)
+        public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
         {
             if (rest.duration.Contains("}"))
             {
@@ -55,6 +55,8 @@ namespace DPA_Musicsheets.composites
                 BarLineComposite barLineComposite = new BarLineComposite(_alternativeRepeatNumber);
                 symbols = barLineComposite.visit(symbols);
             }
+
+            return symbols;
         }
     }
 }

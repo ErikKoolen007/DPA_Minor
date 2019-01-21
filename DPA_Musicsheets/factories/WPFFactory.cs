@@ -58,7 +58,7 @@ namespace DPA_Musicsheets.factories
             try
             {
                 MusicPartWrapper relative = (MusicPartWrapper) _tokens.First();
-                AbstractComposite composite = new RelativeComposite(relative);
+                AbstractComposite composite = new RelativeComposite(relative, _tokens);
                 symbols = composite.visit(new List<MusicalSymbol>());
             }
             catch (InvalidCastException ex)
