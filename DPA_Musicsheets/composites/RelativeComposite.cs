@@ -15,14 +15,14 @@ namespace DPA_Musicsheets
     {
         private MusicPartWrapper _relative;
         private LinkedList<MusicPart> _parts;
-        public RelativeComposite(MusicPartWrapper relative, LinkedList<MusicPart> parts)
+        public RelativeComposite(MusicPartWrapper relative)
         {
             _relative = relative;
-            _parts = parts;
         }
 
         public List<MusicalSymbol> visit(List<MusicalSymbol> symbols)
         {
+            _parts = _relative._symbols;
             return next(symbols);
         }
 

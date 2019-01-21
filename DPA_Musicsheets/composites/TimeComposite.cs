@@ -20,7 +20,7 @@ namespace DPA_Musicsheets.composites
         {
             var times = time.ToString().Split('/');
             symbols.Add(new TimeSignature(TimeSignatureType.Numbers, UInt32.Parse(times[0].Substring(times[0].Length-1)), UInt32.Parse(times[1])));
-            return visit(symbols);
+            return next(symbols);
         }
 
         public List<MusicalSymbol> next(List<MusicalSymbol> symbols)
