@@ -107,43 +107,46 @@ namespace DPA_Musicsheets.interpreters
 
         private void fillHashSet()
         {
+            //string copyStr = _musicPartStr;
+            //string copyNoteStr = copyStr;
+
+            //int index = 0;
+            //int i = copyStr.IndexOf("\\relative");
+            //copyStr = copyStr.Remove(i, 14);
+            //while (index != -1)
+            //{
+            //    try
+            //    {   
+            //        if (i != -1 && !copyNoteStr.Substring(i, 12).Contains("\\") && 
+            //            !copyNoteStr.Substring(i, 12).Contains("{") &&
+            //            !copyNoteStr.Substring(i, 12).Contains("repeat") &&
+            //            !copyNoteStr.Substring(i, 12).Contains("clef"))
+            //        {
+            //            interpreterOrder.Add(i+10, noteIntP);
+
+            //        }
+            //        else if (!copyNoteStr.Contains("\\") && !copyNoteStr.Contains("{") && copyNoteStr != "")
+            //        {
+            //            interpreterOrder.Add(i+10, noteIntP);
+            //        }
+            //        i = copyNoteStr.IndexOf("\\");
+            //        copyNoteStr = copyNoteStr.Remove(i, 1);
+
+            //        if (copyNoteStr == "" || i + 10 > copyNoteStr.Length)
+            //        {
+            //            index = -1;
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        break;
+            //    }
+            //}
             string copyStr = _musicPartStr;
-            string copyNoteStr = copyStr;
-
+            copyStr = copyStr.Remove(copyStr.IndexOf("\\relative"), 14);
             int index = 0;
-            int i = copyStr.IndexOf("\\relative");
-            copyStr = copyStr.Remove(i, 14);
-            while (index != -1)
-            {
-                try
-                {   
-                    if (i != -1 && !copyNoteStr.Substring(i, 12).Contains("\\") && 
-                        !copyNoteStr.Substring(i, 12).Contains("{") &&
-                        !copyNoteStr.Substring(i, 12).Contains("repeat") &&
-                        !copyNoteStr.Substring(i, 12).Contains("clef"))
-                    {
-                        interpreterOrder.Add(i+10, noteIntP);
 
-                    }
-                    else if (!copyNoteStr.Contains("\\") && !copyNoteStr.Contains("{") && copyNoteStr != "")
-                    {
-                        interpreterOrder.Add(i+10, noteIntP);
-                    }
-                    i = copyNoteStr.IndexOf("\\");
-                    copyNoteStr = copyNoteStr.Remove(i, 1);
-
-                    if (copyNoteStr == "" || i + 10 > copyNoteStr.Length)
-                    {
-                        index = -1;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    break;
-                }
-            }
-
-            index = 0;
+            addNoteInterpreter(0, copyStr);
             while (index != -1)
             {
                 index = copyStr.IndexOf("clef treble");
@@ -151,6 +154,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -162,6 +166,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -173,6 +178,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, clefIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -184,6 +190,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, timeIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -195,6 +202,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, tempoIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -206,6 +214,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, repeatIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -217,6 +226,7 @@ namespace DPA_Musicsheets.interpreters
                 {
                     interpreterOrder.Add(index, alternativeIntP);
                     copyStr = copyStr.Insert(index + 1, "xxx");
+                    addNoteInterpreter(index, copyStr);
                 }
             }
 
@@ -224,6 +234,18 @@ namespace DPA_Musicsheets.interpreters
             _musicPartStr = _musicPartStr.Remove(0, index + 15);
             index = _musicPartStr.LastIndexOf("}");
             _musicPartStr = _musicPartStr.Remove(index);
+        }
+
+        private void addNoteInterpreter(int index, string copyNoteStr)
+        {
+            string sString = copyNoteStr.Substring(index);
+            if (sString.Length > 22)
+                sString = sString.Substring(0, 22);
+
+            if (index != -1 && !sString.Contains("\\") && !sString.Contains("{"))
+            {
+                interpreterOrder.Add(index + 1, noteIntP);
+            }
         }
     }
 }
