@@ -99,7 +99,14 @@ namespace DPA_Musicsheets.interpreters
                 }
                 //only letter and duration of the note are left
                 _note.letter = _note.letter.Replace("L", _musicPartStr[0].ToString());
-                _note.duration = _note.duration.Replace("D", _musicPartStr[1].ToString());
+                if(_musicPartStr.Length == 2)
+                    _note.duration = _note.duration.Replace("D", _musicPartStr[1].ToString());
+                else if (_musicPartStr.Length == 3)
+                {
+                    string temp = _musicPartStr[1].ToString();
+                    temp += _musicPartStr[2].ToString();
+                    _note.duration = _note.duration.Replace("D", temp);
+                }
             }
            
             return Delegate();

@@ -42,7 +42,7 @@ namespace DPA_Musicsheets.domain
                 case WrapperType.Repeat:
                     return "\\repeat volta 2 { \r\n" + listContent.ToString() + "\r\n }";
                 default:
-                    return "\\relative c' { \r\n" + listContent.ToString() + "\r\n | }";
+                    return "\\relative c' {  \r\n" + listContent.ToString() + "\r\n | }";
             }
         }
 
