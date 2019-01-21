@@ -27,7 +27,7 @@ namespace DPA_Musicsheets.composites
             {
                 if (char.IsDigit(c))
                 {
-                    duration = Int32.Parse(dur);
+                    duration = Int32.Parse(c.ToString());
                     symbols.Add(new PSAMControlLibrary.Rest((MusicalSymbolDuration)duration));
                     break;
                 }
