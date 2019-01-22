@@ -137,7 +137,7 @@ namespace DPA_Musicsheets.composites
             }
 
             previousNote = note.letter[0];
-            int dur = Int32.Parse(duration);
+            int dur = checkDuration(duration);
             var psamNote = new Note(letter.ToUpper(), alter, previousOctave, (MusicalSymbolDuration)dur, NoteStemDirection.Up, tie, new List<NoteBeamType>() { NoteBeamType.Single });
             psamNote.NumberOfDots += dotsCount;
 
@@ -164,6 +164,18 @@ namespace DPA_Musicsheets.composites
                     return c;
             }
             return '?';
+        }
+
+        private int checkDuration(string duration)
+        {
+            string checkedString = "";
+            foreach (char c in duration)
+            {
+                if (char.IsDigit(c))
+                    checkedString += c;
+            }
+
+            return Int32.Parse(checkedString);
         }
     }
 }

@@ -66,8 +66,18 @@ namespace DPA_Musicsheets.interpreters
                         {
                             try
                             {
-                                BaseNote tmpN = (BaseNote)content.Last();
-                                BaseNoteMark newN = new BaseNoteMark(tmpN);
+                                BaseNoteMark newN;
+                                if (content.Last().GetType() == typeof(Rest))
+                                {
+                                    Rest rest = (Rest)content.Last();
+                                    newN = new BaseNoteMark(rest.duration, rest.letter);
+                                }
+                                else
+                                {
+                                    BaseNote tmpN = (BaseNote)content.Last();
+                                    newN = new BaseNoteMark(tmpN);
+                                }
+
                                 content.RemoveLast();
                                 content.AddLast(newN);
                             }

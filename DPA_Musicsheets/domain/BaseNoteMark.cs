@@ -13,6 +13,11 @@ namespace DPA_Musicsheets.domain
             Decorate();
         }
 
+        public BaseNoteMark(string duration, string letter) : base(letter, duration)
+        {
+            Decorate();
+        }
+
         public sealed override void Decorate()
         {
             duration = duration + " | \r\n";

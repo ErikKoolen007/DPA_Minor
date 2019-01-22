@@ -34,18 +34,18 @@ namespace DPA_Musicsheets.interpreters
             {
                 if(entry.Value.GetType() == typeof(NoteInterpreter))
                 {
-                    string notesString;
-                    string[] notesArr;
+                    string notesString = "";
                     if (_musicPartStr.IndexOf("\\") != -1)
                     {
                         int endIndex = _musicPartStr.IndexOf("\\");
                         notesString = _musicPartStr.Substring(0, endIndex);
+                        _musicPartStr = _musicPartStr.Remove(0, endIndex);
                     }
                     else
                     {
                         notesString = _musicPartStr.Substring(0);
                     }
-                    notesArr = notesString.Split(null);
+                    var notesArr = notesString.Split(null);
                     foreach (var n in notesArr)
                     {
                         if (n != "" && n != "}")
@@ -54,8 +54,18 @@ namespace DPA_Musicsheets.interpreters
                             {
                                 try
                                 {
-                                    BaseNote tmpN = (BaseNote)_domain.Last();
-                                    BaseNoteMark newN = new BaseNoteMark(tmpN);
+                                    BaseNoteMark newN;
+                                    if (_domain.Last().GetType() == typeof(Rest))
+                                    {
+                                        Rest rest = (Rest) _domain.Last();
+                                        newN = new BaseNoteMark(rest.duration, rest.letter);
+                                    }
+                                    else
+                                    {
+                                        BaseNote tmpN = (BaseNote) _domain.Last();
+                                        newN = new BaseNoteMark(tmpN);
+                                    }
+
                                     _domain.RemoveLast();
                                     _domain.AddLast(newN);
                                 }
