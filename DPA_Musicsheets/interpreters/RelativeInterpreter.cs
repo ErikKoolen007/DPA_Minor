@@ -241,9 +241,16 @@ namespace DPA_Musicsheets.interpreters
             }
 
             index = _musicPartStr.IndexOf("relative");
-            _musicPartStr = _musicPartStr.Remove(0, index + 15);
+            if (index != -1)
+            {
+                _musicPartStr = _musicPartStr.Remove(0, index + 15);
+            }
+
             index = _musicPartStr.LastIndexOf("}");
-            _musicPartStr = _musicPartStr.Remove(index);
+            if (index != -1)
+            {
+                _musicPartStr = _musicPartStr.Remove(index);
+            }
         }
 
         private void addNoteInterpreter(int index, string copyNoteStr)

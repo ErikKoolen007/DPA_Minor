@@ -66,9 +66,15 @@ namespace DPA_Musicsheets.interpreters
 
                 if (_musicPartStr.Contains("'"))
                 {
-                    index = _musicPartStr.IndexOf("'");
-                    _musicPartStr = _musicPartStr.Remove(index, 1);
-                    _note = new BaseNoteApostrophe(_note);
+                    foreach (char c in _musicPartStr)
+                    {
+                        index = _musicPartStr.IndexOf("'");
+                        if (index != -1)
+                        {
+                            _musicPartStr = _musicPartStr.Remove(index, 1);
+                            _note = new BaseNoteApostrophe(_note);
+                        }
+                    }
                 }
 
                 if (_musicPartStr.Contains(","))
