@@ -90,6 +90,7 @@ namespace DPA_Musicsheets.ViewModels
                         
                         factory = new WPFFactory(domain, _musicLoader.StaffsViewModel, _musicLoader.MidiPlayerViewModel);
                         factory.Load();
+                        _musicLoader.DomainText = LilypondText;
                         //_musicLoader.LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
                         _mainViewModel.CurrentState = "";
                     }
